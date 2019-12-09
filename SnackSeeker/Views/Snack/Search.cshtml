@@ -1,0 +1,13 @@
+﻿
+@{
+    ViewData["Title"] = "Search";
+}
+@model List<Business>
+<h1>Search</h1>
+
+<form action="/" method="post">
+    <p>Search for a type of food (for example: burgers or cajun or chinease):</p>
+    <input type="text" name="tag" value="" placeholder="Search for Something Awesome and Tasty!!" />
+    @*<input type="text" name="location" value="" placeholder="Where are you?"/>*@
+    <input type="submit" value="Search!" />
+</form>
