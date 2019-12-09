@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SnackSeeker
+namespace SnackSeeker.Models
 {
     public partial class AspNetRoleClaims
     {

@@ -12,6 +12,7 @@ using SnackSeeker.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SnackSeeker.Models;
 
 namespace SnackSeeker
 {

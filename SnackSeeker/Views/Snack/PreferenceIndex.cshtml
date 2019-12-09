@@ -1,0 +1,23 @@
+﻿
+@{
+    ViewData["Title"] = "PreferenceIndex";
+}
+
+@model List<Preferences>
+
+<h1>PreferenceIndex</h1>
+
+<table class="table table-bordered">
+    <tr>
+        <th>User Preference</th>
+        <th>Rating</th>
+    </tr>
+    @foreach (var pref in Model)
+    {
+        <tr>
+            <td>@pref.Name</td>
+            <td>@pref.Rating</td>
+        </tr>
+    }
+
+</table>

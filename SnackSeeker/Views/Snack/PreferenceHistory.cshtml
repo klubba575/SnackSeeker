@@ -1,0 +1,27 @@
+﻿@using System.Security.Claims;
+
+@{
+    ViewData["Title"] = "PreferenceHistory";
+}
+
+@model List<Review>
+
+<h1>@User.FindFirst(ClaimTypes.NameIdentifier).Value</h1>
+<h2>Resturant Review History</h2>
+<table class="table table-bordered">
+    <tr>
+        <th>Resturant</th>
+        <th>Review</th>
+    </tr>
+    @foreach (var review in Model)
+    {
+        <tr>
+            <td>@review.ResturantName</td>
+            <td>@review.ReviewOfRating</td>
+            <td>@review.ReviewOfType1</td>
+            <td>@review.ReviewOfType2</td>
+            <td>@review.ReviewOfType3</td>
+        </tr>
+    }
+
+</table>
