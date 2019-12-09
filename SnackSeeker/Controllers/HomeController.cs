@@ -12,10 +12,13 @@ namespace SnackSeeker.Controllers
 	public class HomeController : Controller
 	{
 		private readonly ILogger<HomeController> _logger;
+		
 
 		public HomeController(ILogger<HomeController> logger)
 		{
-			_logger = logger;
+		 var logFile = File.ReadAllLines("C:\\Users\\wilde\\Documents\\restaurants.txt");
+		 var logList = new List<string>(logFile);
+		_logger = logger;
 		}
 
 		public IActionResult Index()
