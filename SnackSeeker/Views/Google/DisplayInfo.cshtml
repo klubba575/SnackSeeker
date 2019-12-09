@@ -1,0 +1,26 @@
+﻿
+@{
+    ViewData["Title"] = "DisplayInfo";
+} 
+@model string
+
+<h1>DisplayInfo</h1>
+
+<form action="../Google/DisplayInfo" method="post">
+    <input type="text" name="location" value="" />
+    <input type="submit"  value="Submit!" />
+</form>
+
+
+@if (Model != null)
+{
+    
+<iframe width="450"
+        height="250"
+        frameborder="0" style="border:0"
+        src="https://www.google.com/maps/embed/v1/search?key=@ViewData["hidden"]&q=@Model" allowfullscreen>
+</iframe>
+}
+
+
+
