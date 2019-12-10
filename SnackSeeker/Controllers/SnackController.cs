@@ -19,21 +19,16 @@ namespace SnackSeeker.Controllers
         private readonly Location _yelpLocationContext;
         private readonly string _yelpKey;
         private readonly HttpClient _client;
+        private readonly SnacksDbContext _context;
+        private readonly double snackAlgo;
 
-        public SnackController(ILogger<SnackController> logger, IConfiguration configuration)
+        public SnackController(ILogger<SnackController> logger, IConfiguration configuration, SnacksDbContext context)
         {
             _logger = logger;
             _yelpKey = configuration.GetSection("ApiKeys")["YelpApi"];
             _client = new HttpClient();
             _client.BaseAddress = new Uri("https://api.yelp.com/v3/");
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _yelpKey);
-        }
-        public IActionResult Index()
-        private readonly SnacksDbContext _context;
-        private readonly double snackAlgo;
-
-        public SnackController(SnacksDbContext context)
-        {
             _context = context;
         }
         public IActionResult PreferenceIndex()
@@ -46,7 +41,7 @@ namespace SnackSeeker.Controllers
             return View();
         }
 
-        public async Task<IActionResult> Search(string tag)
+        public async Task<IActionResult> SearchCategory(string tag)
         {
             var tagResponse = await _client.GetAsync($"categories/{tag}");
             var tagResults = await tagResponse.Content.ReadAsAsync<Categories>();
