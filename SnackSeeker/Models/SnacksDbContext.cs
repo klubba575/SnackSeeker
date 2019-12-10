@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace SnackSeeker
+namespace SnackSeeker.Models
 {
     public partial class SnacksDbContext : DbContext
     {
@@ -155,6 +155,8 @@ namespace SnackSeeker
             modelBuilder.Entity<Review>(entity =>
             {
                 entity.Property(e => e.RestaurantId).HasMaxLength(50);
+
+                entity.Property(e => e.RestaurantName).HasMaxLength(100);
 
                 entity.Property(e => e.UserId).HasMaxLength(450);
 

@@ -1,0 +1,35 @@
+﻿
+@{
+    ViewData["Title"] = "PreferenceIndex";
+}
+
+@model List<Preferences>
+
+<h1>PreferenceIndex</h1>
+
+<form action="../Snack/UserPreference" method="post">
+    <select name="weight">
+        <option value="1.0">Rating</option>
+        <option value="2.0">Type</option>
+        <option value="3.0">Price</option>
+    </select>
+    <input type="submit" value="Submit" />
+</form>
+
+@if (Model != null)
+{
+<table class="table table-bordered">
+    <tr>
+        <th>User Preference</th>
+        <th>Rating</th>
+    </tr>
+    @foreach (var pref in Model)
+    {
+        <tr>
+            <td>@pref.Name</td>
+            <td>@pref.Rating</td>
+        </tr>
+    }
+
+</table>
+}
