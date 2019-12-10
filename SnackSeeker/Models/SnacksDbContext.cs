@@ -156,7 +156,7 @@ namespace SnackSeeker.Models
             {
                 entity.Property(e => e.RestaurantId).HasMaxLength(50);
 
-                entity.Property(e => e.ResturantName).HasMaxLength(100);
+                entity.Property(e => e.RestaurantName).HasMaxLength(100);
 
                 entity.Property(e => e.UserId).HasMaxLength(450);
 
