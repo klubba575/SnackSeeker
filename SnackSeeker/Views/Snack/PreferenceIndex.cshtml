@@ -15,7 +15,6 @@
     </select>
     <input type="submit" value="Submit" />
 </form>
-
 @if (Model != null)
 {
 <table class="table table-bordered">
@@ -33,3 +32,41 @@
 
 </table>
 }
+@{
+    List<string> userCats = new List<string>();
+}
+@foreach (var pref in Model)
+{
+    userCats.Add(pref.Name);
+}
+
+<form action="../Snack/PreferenceAdd">
+    <select name="category">
+        @foreach (var category in Categories.Category)
+        {
+            if (!userCats.Contains(category))
+            {
+                <option value="@category">
+                    @category
+                </option>
+            }
+        }
+    </select>
+    <input type="number" name="Rating" min="1" max="5"/>
+    <input type="submit" value="Submit"/>
+</form>
+
+<form action="../Snack/PreferenceChange" method="post">
+    <label>Update</label>
+    <input type="radio" name="change" value="Update"/>
+    <label>Delete</label>
+    <input type="radio" name="change" value="Delete"/>
+    <select name="id">
+        @foreach (var prefs in Model)
+        {
+            <option value="@prefs.PreferenceId">@prefs.Name</option>
+        }
+    </select>
+    <input type="number" name="rating" min="1" max="5" />
+    <input type="submit" value="Change"/>
+</form>

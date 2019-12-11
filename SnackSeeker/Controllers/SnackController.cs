@@ -17,7 +17,6 @@ namespace SnackSeeker.Controllers
     public class SnackController : Controller
     {
         private readonly ILogger<SnackController> _logger;
-        private readonly Location _yelpLocationContext;
         private readonly string _yelpKey;
         private readonly HttpClient _client;
         private readonly SnacksDbContext _context;
@@ -34,7 +33,16 @@ namespace SnackSeeker.Controllers
         }
         public IActionResult PreferenceIndex()
         {
-            return View();
+            var preferences = _context.Preferences.ToList();
+            var userPreferences = new List<Preferences>();
+            foreach (var pref in preferences)
+            {
+                if (pref.UserId == User.FindFirst(ClaimTypes.NameIdentifier).Value)
+                {
+                    userPreferences.Add(pref);
+                }
+            }
+            return View(userPreferences);
         }
         [Authorize]
         [HttpGet]
@@ -45,52 +53,18 @@ namespace SnackSeeker.Controllers
         [HttpPost]
         public async Task<IActionResult> SearchCategory(string tag)
         {
-            // check to make sure the user has 3 preferences saved. If not send them to a view to add preferences.
-
-            //int topFirst = 0;
-            //int topSecond = 0;
-            //int topThird = 0;
-
             var categories = _context.Preferences.ToList();
-            //for (int i = 0; i < categories.Count; i++)
-            //{
-            //    if(categories[i].Rating > categories[topFirst].Rating)
-            //    {
-            //        topFirst = i;
-            //    }
-            //}
-            //categories[topFirst].Rating = -1;
-            
-            //for (int j = 0; j < categories.Count; j++)
-            //{
-
-            //    if (categories[j].Rating > categories[topSecond].Rating)
-            //    {
-            //        topSecond = j;
-            //    }
-            //}
-            //categories[topSecond].Rating = -1;
-
-            //for (int k = 0; k < categories.Count; k++)
-            //{
-            //    if (categories[k].Rating > categories[topThird].Rating)
-            //    {
-            //        topThird= k;
-            //    }
-            //}
-            //categories[topThird].Rating = -1;
 
             var sortedList = categories.OrderByDescending(x => x.Rating).ToList();
 
 
             var tagResponse = await _client.GetAsync($"businesses/search?location={tag}&categories={sortedList[0].Name},{sortedList[1].Name},{sortedList[2].Name}");
             var tagResults = await tagResponse.Content.ReadAsAsync<BusinessRoot>();
-
-            return View("ListCategory",tagResults);
+            return View("ListCategory", tagResults);
         }
+
         public IActionResult ListCategory(BusinessRoot result)
         {
-
             return View(result);
         }
 
@@ -135,6 +109,35 @@ namespace SnackSeeker.Controllers
             {
 
             }
+            return RedirectToAction("PreferenceIndex");
+        }
+
+        public IActionResult PreferenceAdd(string category, int rating)
+        {
+            Preferences newPreferences = new Preferences();
+            newPreferences.Name = category;
+            newPreferences.Rating = rating;
+            newPreferences.UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var findCategory = _context.Preferences.ToList();
+            _context.Preferences.Add(newPreferences);
+            _context.SaveChanges();
+            return RedirectToAction("PreferenceIndex");
+        }
+
+        public IActionResult PreferenceChange(string change, int id, int rating)
+        {
+            var pref = _context.Preferences.Find(id);
+            if (change == "Delete")
+            {
+                _context.Preferences.Remove(pref);
+            }
+            else if (change == "Update")
+            {
+                pref.Rating = rating;
+                _context.Entry(pref).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                _context.Preferences.Update(pref);
+            }
+            _context.SaveChanges();
             return RedirectToAction("PreferenceIndex");
         }
     }

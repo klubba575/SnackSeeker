@@ -26,9 +26,8 @@ namespace SnackSeeker.Controllers
 		}
 		[HttpPost]
 		public IActionResult DisplayInfo(string location, string name)
-		{
+        {
 			string both = $"{name},{location}";
-			//var response = await _client.GetAsync($"search?key={_googleKey}&q={location}");
 			ViewData["hidden"] = _googleKey;
 			return View((object)both);
 		}

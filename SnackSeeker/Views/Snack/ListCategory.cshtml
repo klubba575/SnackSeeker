@@ -10,6 +10,21 @@
 {
     <tr>
         <td><a href="@business.url">@business.name</a></td>
+        @{
+            int count = business.categories.Count();
+        }
+        @if (count > 0)
+        {
+            <td>@business.categories[0].alias</td>
+        }
+        @if (count > 1)
+        {
+            <td>@business.categories[1].alias</td>
+        }
+        @if (count > 2)
+        {
+            <td>@business.categories[2].alias</td>
+        }
         <td>
             <form action="../Google/DisplayInfo" method="post">
                 <input type="hidden" name="name" value="@business.name" />

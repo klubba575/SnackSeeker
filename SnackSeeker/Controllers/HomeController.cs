@@ -21,7 +21,7 @@ namespace SnackSeeker.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            return RedirectToAction("PreferenceIndex", "Snack");
         }
 
         public IActionResult Privacy()
