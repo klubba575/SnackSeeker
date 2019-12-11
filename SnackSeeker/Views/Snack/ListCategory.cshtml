@@ -1,0 +1,22 @@
+﻿
+@{
+    ViewData["Title"] = "ListCategory";
+}
+@model BusinessRoot
+
+<h1>ListCategory</h1>
+<table>
+@foreach (var business in Model.businesses)
+{
+    <tr>
+        <td><a href="@business.url">@business.name</a></td>
+        <td>
+            <form action="../Google/DisplayInfo" method="post">
+                <input type="hidden" name="name" value="@business.name" />
+                <input type="hidden" name="location" value="@business.location.city" />
+                <input type="submit" value="See Map!" />
+            </form>
+        </td>
+    </tr>
+}
+</table>

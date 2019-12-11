@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using SnackSeeker.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SnackSeeker.Controllers
 {
@@ -35,18 +36,62 @@ namespace SnackSeeker.Controllers
         {
             return View();
         }
-
-        public IActionResult Search()
+        [Authorize]
+        [HttpGet]
+        public IActionResult SearchCategory()
         {
             return View();
         }
-
+        [HttpPost]
         public async Task<IActionResult> SearchCategory(string tag)
         {
-            var tagResponse = await _client.GetAsync($"categories/{tag}");
-            var tagResults = await tagResponse.Content.ReadAsAsync<Categories>();
+            // check to make sure the user has 3 preferences saved. If not send them to a view to add preferences.
 
-            return View(tagResults);
+            //int topFirst = 0;
+            //int topSecond = 0;
+            //int topThird = 0;
+
+            var categories = _context.Preferences.ToList();
+            //for (int i = 0; i < categories.Count; i++)
+            //{
+            //    if(categories[i].Rating > categories[topFirst].Rating)
+            //    {
+            //        topFirst = i;
+            //    }
+            //}
+            //categories[topFirst].Rating = -1;
+            
+            //for (int j = 0; j < categories.Count; j++)
+            //{
+
+            //    if (categories[j].Rating > categories[topSecond].Rating)
+            //    {
+            //        topSecond = j;
+            //    }
+            //}
+            //categories[topSecond].Rating = -1;
+
+            //for (int k = 0; k < categories.Count; k++)
+            //{
+            //    if (categories[k].Rating > categories[topThird].Rating)
+            //    {
+            //        topThird= k;
+            //    }
+            //}
+            //categories[topThird].Rating = -1;
+
+            var sortedList = categories.OrderByDescending(x => x.Rating).ToList();
+
+
+            var tagResponse = await _client.GetAsync($"businesses/search?location={tag}&categories={sortedList[0].Name},{sortedList[1].Name},{sortedList[2].Name}");
+            var tagResults = await tagResponse.Content.ReadAsAsync<BusinessRoot>();
+
+            return View("ListCategory",tagResults);
+        }
+        public IActionResult ListCategory(BusinessRoot result)
+        {
+
+            return View(result);
         }
 
         //TODO: Make a model for preference history including a List of Review and Categories

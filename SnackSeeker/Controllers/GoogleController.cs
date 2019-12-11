@@ -25,11 +25,12 @@ namespace SnackSeeker.Controllers
 			return View();
 		}
 		[HttpPost]
-		public IActionResult DisplayInfo(string location)
+		public IActionResult DisplayInfo(string location, string name)
 		{
+			string both = $"{name},{location}";
 			//var response = await _client.GetAsync($"search?key={_googleKey}&q={location}");
 			ViewData["hidden"] = _googleKey;
-			return View((object)location);
+			return View((object)both);
 		}
 
 	}
