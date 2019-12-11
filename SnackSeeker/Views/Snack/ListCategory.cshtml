@@ -10,6 +10,14 @@
 {
     <tr>
         <td><a href="@business.url">@business.name</a></td>
+        <td>
+            <form action="../Google/DisplayInfo" method="post">
+                <input type="hidden" name="name" value="@business.name" />
+                <input type="hidden" name="location" value="@business.location.city" />
+                <input type="submit" value="See Map!" />
+            </form>
+        </td>
+        <td>@business.price</td>
         @{
             int count = business.categories.Count();
         }
@@ -25,13 +33,7 @@
         {
             <td>@business.categories[2].alias</td>
         }
-        <td>
-            <form action="../Google/DisplayInfo" method="post">
-                <input type="hidden" name="name" value="@business.name" />
-                <input type="hidden" name="location" value="@business.location.city" />
-                <input type="submit" value="See Map!" />
-            </form>
-        </td>
+        
     </tr>
 }
 </table>

@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace SnackSeeker.Controllers
 {
+	[Authorize]
     public class SnackController : Controller
     {
         private readonly ILogger<SnackController> _logger;
@@ -44,22 +45,41 @@ namespace SnackSeeker.Controllers
             }
             return View(userPreferences);
         }
-        [Authorize]
         [HttpGet]
         public IActionResult SearchCategory()
         {
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> SearchCategory(string tag)
+        public async Task<IActionResult> SearchCategory(string tag, string Price1, string Price2, string Price3, string Price4)
         {
-            var categories = _context.Preferences.ToList();
+			List<string> checkPrice = new List<string>() { Price1, Price2, Price3, Price4 };
+			
+			var multiplePrices = "";
+			foreach (var price in checkPrice)
+			{
+				if (price != null)
+				{
+					multiplePrices += $"{price},";
+				}
+			}
+			multiplePrices = multiplePrices.TrimEnd(',');
+
+
+			string id = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var categories = _context.Preferences.Where(x => x.UserId == id).ToList();
 
             var sortedList = categories.OrderByDescending(x => x.Rating).ToList();
-
-
-            var tagResponse = await _client.GetAsync($"businesses/search?location={tag}&categories={sortedList[0].Name},{sortedList[1].Name},{sortedList[2].Name}");
-            var tagResults = await tagResponse.Content.ReadAsAsync<BusinessRoot>();
+			HttpResponseMessage tagResponse;
+			if (multiplePrices.Length == 0)
+			{
+				tagResponse = await _client.GetAsync($"businesses/search?location={tag}&categories={sortedList[0].Name},{sortedList[1].Name},{sortedList[2].Name}");
+			}
+			else
+			{
+				tagResponse = await _client.GetAsync($"businesses/search?location={tag}&categories={sortedList[0].Name},{sortedList[1].Name},{sortedList[2].Name}&price={multiplePrices}");
+			}			
+			var tagResults = await tagResponse.Content.ReadAsAsync<BusinessRoot>();
             return View("ListCategory", tagResults);
         }
 
