@@ -24,7 +24,6 @@ namespace SnackSeeker.Models
         public virtual DbSet<AspNetUsers> AspNetUsers { get; set; }
         public virtual DbSet<Preferences> Preferences { get; set; }
         public virtual DbSet<Review> Review { get; set; }
-        public virtual DbSet<Search> Search { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -164,18 +163,6 @@ namespace SnackSeeker.Models
                     .WithMany(p => p.Review)
                     .HasForeignKey(d => d.UserId)
                     .HasConstraintName("FK__Review__UserId__6477ECF3");
-            });
-
-            modelBuilder.Entity<Search>(entity =>
-            {
-                entity.Property(e => e.CategoryAlias).HasMaxLength(50);
-
-                entity.Property(e => e.UserId).HasMaxLength(450);
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.Search)
-                    .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK__Search__UserId__619B8048");
             });
 
             OnModelCreatingPartial(modelBuilder);

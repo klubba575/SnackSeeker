@@ -3,15 +3,18 @@
     ViewData["Title"] = "Search";
 }
 @model Categories
-<h1>Search</h1>
+<h1>Seek Your Snacks, Where are you?</h1>
 
 <form action="../Snack/SearchCategory" method="post">
-    <p>
-        Enter Your Location Please!p>
+    <p> Enter Your Location Please!</p>
         <input type="text" name="tag" value="" placeholder="Location" />
+        <label>$ - Cheapest</label>
         <input type="checkbox" name="Price1" value="1" />
+        <label>$$</label>
         <input type="checkbox" name="Price2" value="2" />
+        <label>$$$</label>
         <input type="checkbox" name="Price3" value="3" />
+        <label>$$$$ - Most Expensive</label>
         <input type="checkbox" name="Price4" value="4" />
         <input type="submit" value="Search!" />
 

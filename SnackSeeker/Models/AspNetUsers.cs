@@ -13,7 +13,6 @@ namespace SnackSeeker.Models
             AspNetUserTokens = new HashSet<AspNetUserTokens>();
             Preferences = new HashSet<Preferences>();
             Review = new HashSet<Review>();
-            Search = new HashSet<Search>();
         }
 
         public string Id { get; set; }
@@ -31,6 +30,7 @@ namespace SnackSeeker.Models
         public DateTimeOffset? LockoutEnd { get; set; }
         public bool LockoutEnabled { get; set; }
         public int AccessFailedCount { get; set; }
+        public double? PriceAverage { get; set; }
 
         public virtual ICollection<AspNetUserClaims> AspNetUserClaims { get; set; }
         public virtual ICollection<AspNetUserLogins> AspNetUserLogins { get; set; }
@@ -38,6 +38,5 @@ namespace SnackSeeker.Models
         public virtual ICollection<AspNetUserTokens> AspNetUserTokens { get; set; }
         public virtual ICollection<Preferences> Preferences { get; set; }
         public virtual ICollection<Review> Review { get; set; }
-        public virtual ICollection<Search> Search { get; set; }
     }
 }

@@ -32,6 +32,29 @@ namespace SnackSeeker.Controllers
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _yelpKey);
             _context = context;
         }
+		private void CalcAverage()
+		{
+			var reviews = _context.Review.ToList();
+			double priceAverage = 0;
+			int counter = 0;
+			foreach (var review in reviews) 
+			{
+				if(review.UserId == User.FindFirst(ClaimTypes.NameIdentifier).Value)
+				{
+					priceAverage = priceAverage + (double)review.ReviewOfPrice;
+					counter++;
+				}
+			}
+			priceAverage = priceAverage / counter;
+			var id = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+			var user = _context.AspNetUsers.Where(x => x.Id == id).ToList();
+			var actualUser = user[0];
+			actualUser.PriceAverage = priceAverage;
+			_context.Entry(priceAverage).State = EntityState.Modified;
+
+			_context.SaveChanges();
+
+		}
         public IActionResult PreferenceIndex()
         {
             var preferences = _context.Preferences.ToList();
