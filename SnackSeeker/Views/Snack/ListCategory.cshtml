@@ -6,34 +6,40 @@
 
 <h1>Here Are Your Recommended Restaurants!</h1>
 <table>
-@foreach (var business in Model.businesses)
-{
-    <tr>
-        <td><a href="@business.url">@business.name</a></td>
-        <td>
-            <form action="../Google/DisplayInfo" method="post">
-                <input type="hidden" name="name" value="@business.name" />
-                <input type="hidden" name="location" value="@business.location.city" />
-                <input type="submit" value="See Map!" />
-            </form>
-        </td>
-        <td>@business.price</td>
-        @{
-            int count = business.categories.Count();
-        }
-        @if (count > 0)
-        {
-            <td>@business.categories[0].alias</td>
-        }
-        @if (count > 1)
-        {
-            <td>@business.categories[1].alias</td>
-        }
-        @if (count > 2)
-        {
-            <td>@business.categories[2].alias</td>
-        }
-        
-    </tr>
-}
+    @foreach (var business in Model.businesses)
+    {
+        <tr>
+            <td><a href="@business.url">@business.name</a></td>
+            <td>
+                <form action="../Google/DisplayInfo" method="post">
+                    <input type="hidden" name="name" value="@business.name" />
+                    <input type="hidden" name="location" value="@business.location.city" />
+                    <input type="submit" value="See Map!" />
+                </form>
+            </td>
+            <td>
+                <form action="../Review/ReviewCheck" method="post">
+                    <input type="hidden" name="BusinessId" value="@business.id" />
+                    <input type="submit"  value="Submit Review!" />
+                </form>
+            </td>
+            <td>@business.price</td>
+            @{
+                int count = business.categories.Count();
+            }
+            @if (count > 0)
+            {
+                <td>@business.categories[0].alias</td>
+            }
+            @if (count > 1)
+            {
+                <td>@business.categories[1].alias</td>
+            }
+            @if (count > 2)
+            {
+                <td>@business.categories[2].alias</td>
+            }
+
+        </tr>
+    }
 </table>

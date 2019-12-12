@@ -1,0 +1,39 @@
+﻿@using System.Security.Claims;
+@{
+    ViewData["Title"] = "ReviewAdd";
+}
+
+@model List<Review>
+
+@*<h1>List of Reviews</h1>
+
+<table class=" table table-bordered">
+        <tr>
+            <th>Restaurant Name></th>
+            <th>Review of Price</th>
+            <th>Review of Type 1</th>
+            <th>Review of Type 2</th>
+            <th>Review of Type 3</th>
+
+        </tr>
+        @{
+            foreach (Review review in Model)
+            {
+                if (User.FindFirst(ClaimTypes.NameIdentifier))
+            }
+        }
+    </table>*@
+
+    <form action="../Review/ReviewAdd" method="post">
+        <input type="hidden" name="UserId" value="@User.FindFirst(ClaimTypes.NameIdentifier).Value" />
+        <input type="hidden" name="RestaurantId" value="" />
+        <input type="number" name="ReviewOfPrice" value="" />
+        <input type="number" name="ReviewOfType1" value="" />
+        <input type="number" name="ReviewOfType2" value="" />
+        <input type="number" name="ReviewOfType3" value="" />
+        <input type="number" name="ReviewOfRating" value="" />
+        <input type="hidden" name="RestaurantName" value="" />
+        <input type="submit"  value="Submit!" />
+
+    </form>
+  

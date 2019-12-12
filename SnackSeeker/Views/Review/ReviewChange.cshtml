@@ -1,0 +1,25 @@
+﻿
+@{
+    ViewData["Title"] = "ReviewChange";
+}
+
+
+
+<h1>Review Change</h1>
+
+<form action="../Review/ReviewChange" method="post">
+    <label>Update</label>
+    <input type="radio" name="change" value="Update" />
+    <label>Delete</label>
+    <input type="radio" name="change" value="Delete" />
+    @foreach (var review in Model)
+    {
+
+        <input type="number" name="ReviewOfPrice" value="@review.ReviewOfPrice" min="1" max="5" />
+        <input type="number" name="ReviewOfType1" value="@review.ReviewOfType1" min="1" max="5" />
+        <input type="number" name="ReviewOfType2" value="@review.ReviewOfType2" min="1" max="5" />
+        <input type="number" name="ReviewOfType3" value="@review.ReviewOfType3" min="1" max="5" />
+        <input type="number" name="ReviewOfRating" value="@review.ReviewOfRating" min="1" max="5" />
+    }
+    <input type="submit" value="Change" />
+</form>
