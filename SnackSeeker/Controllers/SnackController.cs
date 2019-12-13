@@ -41,22 +41,30 @@ namespace SnackSeeker.Controllers
 			{
 				if(review.UserId == User.FindFirst(ClaimTypes.NameIdentifier).Value)
 				{
-					priceAverage = priceAverage + (double)review.ReviewOfPrice;
+					priceAverage = priceAverage + (double)(review.ReviewOfPrice);
 					counter++;
 				}
 			}
 			priceAverage = priceAverage / counter;
 			var id = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-			var user = _context.AspNetUsers.Where(x => x.Id == id).ToList();
-			var actualUser = user[0];
-			actualUser.PriceAverage = priceAverage;
-			_context.Entry(priceAverage).State = EntityState.Modified;
+			var user = _context.AspNetUsers.Where(x => x.Id == id).First();
+
+			user.PriceAverage = priceAverage;
+			_context.Entry(user).State = EntityState.Modified;
 
 			_context.SaveChanges();
 
 		}
         public IActionResult PreferenceIndex()
         {
+            CalcAverage();
+            var userAve = _context.AspNetUsers.ToList();
+            double? userAverage;
+            var id = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var user = _context.AspNetUsers.Where(x => x.Id == id).ToList();
+            userAverage = user[0].PriceAverage;
+            ViewBag.Average = userAverage;
+
             var preferences = _context.Preferences.ToList();
             var userPreferences = new List<Preferences>();
             foreach (var pref in preferences)
@@ -71,12 +79,20 @@ namespace SnackSeeker.Controllers
         [HttpGet]
         public IActionResult SearchCategory()
         {
+            CalcAverage();
+            var userAve = _context.AspNetUsers.ToList();
+            double? userAverage;
+            var userid = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var user = _context.AspNetUsers.Where(x => x.Id == userid).First();
+            userAverage = user.PriceAverage;
+            ViewBag.Average = userAverage;
             return View();
         }
         [HttpPost]
         public async Task<IActionResult> SearchCategory(string tag, string Price1, string Price2, string Price3, string Price4)
         {
-			List<string> checkPrice = new List<string>() { Price1, Price2, Price3, Price4 };
+
+            List<string> checkPrice = new List<string>() { Price1, Price2, Price3, Price4 };
 			
 			var multiplePrices = "";
 			foreach (var price in checkPrice)
@@ -135,23 +151,7 @@ namespace SnackSeeker.Controllers
                 _context.Update(findPreference);
             }
             _context.SaveChanges();
-            
-            // Rating
-            if(weight == "1.0")
-            {
-                
-            }
 
-            // Type
-            else if (weight == "2.0")
-            {
-
-            }
-            // Price
-            else
-            {
-
-            }
             return RedirectToAction("PreferenceIndex");
         }
 
@@ -177,7 +177,7 @@ namespace SnackSeeker.Controllers
             else if (change == "Update")
             {
                 pref.Rating = rating;
-                _context.Entry(pref).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                _context.Entry(pref).State = EntityState.Modified;
                 _context.Preferences.Update(pref);
             }
             _context.SaveChanges();
