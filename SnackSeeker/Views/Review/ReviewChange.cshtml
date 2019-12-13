@@ -3,23 +3,25 @@
     ViewData["Title"] = "ReviewChange";
 }
 
-
+@model ReviewModel
 
 <h1>Review Change</h1>
 
 <form action="../Review/ReviewChange" method="post">
+    <input type="hidden" name="restaurantId" value="@Model.Restaurant.id" />
     <label>Update</label>
     <input type="radio" name="change" value="Update" />
     <label>Delete</label>
     <input type="radio" name="change" value="Delete" />
-    @foreach (var review in Model)
-    {
-
-        <input type="number" name="ReviewOfPrice" value="@review.ReviewOfPrice" min="1" max="5" />
-        <input type="number" name="ReviewOfType1" value="@review.ReviewOfType1" min="1" max="5" />
-        <input type="number" name="ReviewOfType2" value="@review.ReviewOfType2" min="1" max="5" />
-        <input type="number" name="ReviewOfType3" value="@review.ReviewOfType3" min="1" max="5" />
-        <input type="number" name="ReviewOfRating" value="@review.ReviewOfRating" min="1" max="5" />
-    }
+    <label>Review Price</label>
+    <input type="number" name="ReviewOfPrice" value="@Model.UpdateRestaurantReview.ReviewOfPrice" min="1" max="5" />
+    <label>Review @Model.Restaurant.categories[0].title</label>
+    <input type="number" name="ReviewOfType1" value="@Model.UpdateRestaurantReview.ReviewOfType1" min="1" max="5" />
+    <label>Review @Model.Restaurant.categories[1].title</label>
+    <input type="number" name="ReviewOfType2" value="@Model.UpdateRestaurantReview.ReviewOfType2" min="1" max="5" />
+    <label>Review @Model.Restaurant.categories[2].title</label>
+    <input type="number" name="ReviewOfType3" value="@Model.UpdateRestaurantReview.ReviewOfType3" min="1" max="5" />
+    <label>Review Rating</label>
+    <input type="number" name="ReviewOfRating" value="@Model.UpdateRestaurantReview.ReviewOfRating" min="1" max="5" />
     <input type="submit" value="Change" />
 </form>

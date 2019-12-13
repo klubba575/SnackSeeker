@@ -11,6 +11,7 @@ namespace SnackSeeker.Models
             AspNetUserLogins = new HashSet<AspNetUserLogins>();
             AspNetUserRoles = new HashSet<AspNetUserRoles>();
             AspNetUserTokens = new HashSet<AspNetUserTokens>();
+            FavoritesList = new HashSet<FavoritesList>();
             Preferences = new HashSet<Preferences>();
             Review = new HashSet<Review>();
         }
@@ -36,6 +37,7 @@ namespace SnackSeeker.Models
         public virtual ICollection<AspNetUserLogins> AspNetUserLogins { get; set; }
         public virtual ICollection<AspNetUserRoles> AspNetUserRoles { get; set; }
         public virtual ICollection<AspNetUserTokens> AspNetUserTokens { get; set; }
+        public virtual ICollection<FavoritesList> FavoritesList { get; set; }
         public virtual ICollection<Preferences> Preferences { get; set; }
         public virtual ICollection<Review> Review { get; set; }
     }

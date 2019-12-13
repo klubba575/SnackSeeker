@@ -14,6 +14,9 @@ namespace SnackSeeker.Models
         public double? ReviewOfType3 { get; set; }
         public double? ReviewOfRating { get; set; }
         public string RestaurantName { get; set; }
+        public string Type1Name { get; set; }
+        public string Type2Name { get; set; }
+        public string Type3Name { get; set; }
 
         public virtual AspNetUsers User { get; set; }
     }

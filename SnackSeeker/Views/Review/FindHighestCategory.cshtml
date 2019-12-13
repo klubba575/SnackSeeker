@@ -1,0 +1,16 @@
+﻿
+@{
+    ViewData["Title"] = "FindHighestCategory";
+}
+@model List<string>
+
+<h1>FindHighestCategory</h1>
+
+<table>
+    <tr>
+    @foreach (var category in Model)
+    {
+        <td>@category</td>
+    }
+   </tr>
+</table>

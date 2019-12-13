@@ -22,6 +22,7 @@ namespace SnackSeeker.Models
         public virtual DbSet<AspNetUserRoles> AspNetUserRoles { get; set; }
         public virtual DbSet<AspNetUserTokens> AspNetUserTokens { get; set; }
         public virtual DbSet<AspNetUsers> AspNetUsers { get; set; }
+        public virtual DbSet<FavoritesList> FavoritesList { get; set; }
         public virtual DbSet<Preferences> Preferences { get; set; }
         public virtual DbSet<Review> Review { get; set; }
 
@@ -134,6 +135,24 @@ namespace SnackSeeker.Models
                 entity.Property(e => e.UserName).HasMaxLength(256);
             });
 
+            modelBuilder.Entity<FavoritesList>(entity =>
+            {
+                entity.Property(e => e.Price).HasMaxLength(5);
+
+                entity.Property(e => e.RestaurantId).HasMaxLength(50);
+
+                entity.Property(e => e.RestaurantName)
+                    .HasColumnName("Restaurant_Name")
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.UserId).HasMaxLength(450);
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.FavoritesList)
+                    .HasForeignKey(d => d.UserId)
+                    .HasConstraintName("FK__Favorites__UserI__72C60C4A");
+            });
+
             modelBuilder.Entity<Preferences>(entity =>
             {
                 entity.HasKey(e => e.PreferenceId)
@@ -156,6 +175,12 @@ namespace SnackSeeker.Models
                 entity.Property(e => e.RestaurantId).HasMaxLength(50);
 
                 entity.Property(e => e.RestaurantName).HasMaxLength(100);
+
+                entity.Property(e => e.Type1Name).HasMaxLength(40);
+
+                entity.Property(e => e.Type2Name).HasMaxLength(40);
+
+                entity.Property(e => e.Type3Name).HasMaxLength(40);
 
                 entity.Property(e => e.UserId).HasMaxLength(450);
 

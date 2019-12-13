@@ -5,15 +5,16 @@
 
 @model List<Preferences>
 
-<h1>PreferenceIndex</h1>
+<h1>Preference List</h1>
 
 <form action="../Snack/UserPreference" method="post">
-    <select name="weight">
+    <h3>Add Your User Preferences!</h3>
+    @*<select name="weight">
         <option value="1.0">Rating</option>
         <option value="2.0">Type</option>
         <option value="3.0">Price</option>
-    </select>
-    <input type="submit" value="Submit" />
+    </select>*@
+    @*<input type="submit" value="Submit" />*@
 </form>
 @if (Model != null)
 {
