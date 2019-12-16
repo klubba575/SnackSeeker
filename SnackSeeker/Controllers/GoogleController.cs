@@ -8,36 +8,35 @@ using Microsoft.Extensions.Configuration;
 
 namespace SnackSeeker.Controllers
 {
-	public class GoogleController : Controller
-	{
-		private readonly HttpClient _client;
-		private readonly string _googleKey;
+    public class GoogleController : Controller
+    {
+        private readonly HttpClient _client;
+        private readonly string _googleKey;
 
-		public GoogleController(IHttpClientFactory client, IConfiguration configuration)
-		{
-			_googleKey = configuration.GetSection("ApiKeys")["GoogleApi"];
-			_client = client.CreateClient();
-			_client.BaseAddress = new Uri("https://www.google.com/maps/embed/v1/");
-		}
-		[HttpGet]
-		public IActionResult DisplayInfo()
-		{
-			return View();
-		}
-		[HttpPost]
-		public IActionResult DisplayInfo(string location, string name)
+        public GoogleController(IHttpClientFactory client, IConfiguration configuration)
         {
-			string both = $"{name}, {location}";
-			if (name == null)
-			{
-				both = $"{location}";
-			}
-			
-			ViewData["hidden"] = _googleKey;
-			return View((object)both);
-		}
+            _googleKey = configuration.GetSection("ApiKeys")["GoogleApi"];
+            _client = client.CreateClient();
+            _client.BaseAddress = new Uri("https://www.google.com/maps/embed/v1/");
+        }
+        [HttpGet]
+        public IActionResult DisplayInfo()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult DisplayInfo(string location, string name)
+        {
+            string both = $"{name}, {location}";
+            if (name == null)
+            {
+                both = $"{location}";
+            }
 
-	}
-	
+            ViewData["hidden"] = _googleKey;
+            return View((object)both);
+        }
+    }
 }
+
 

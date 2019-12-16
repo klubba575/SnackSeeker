@@ -7,15 +7,18 @@
 
 <form action="../Snack/SearchCategory" method="post">
     <p> Enter Your Location and Preferred Price Point Please!</p>
-        <input type="text" name="tag" value="" placeholder="Location" />
-        <label>$ - Cheapest</label>
-        <input type="checkbox" name="Price1" value="1" />
-        <label>$$</label>
-        <input type="checkbox" name="Price2" value="2" />
-        <label>$$$</label>
-        <input type="checkbox" name="Price3" value="3" />
-        <label>$$$$ - Most Expensive</label>
-        <input type="checkbox" name="Price4" value="4" />
-        <input type="submit" value="Search!" />
+    <input type="text" name="tag" value="" placeholder="Location" />
+    <label>$ - Cheapest</label>
+    <input type="checkbox" name="Price1" value="1" />
+    <label>$$</label>
+    <input type="checkbox" name="Price2" value="2" />
+    <label>$$$</label>
+    <input type="checkbox" name="Price3" value="3" />
+    <label>$$$$ - Most Expensive</label>
+    <input type="checkbox" name="Price4" value="4" />
+    <input type="submit" value="Search!" />
+    <br />
+    <label>Randomize Preference Search</label>
+    <input type="checkbox" name="random" value="Random" />
 </form>
 <p>Your average price preference is: @ViewBag.Average.ToString("0.#")</p>

@@ -12,19 +12,15 @@ namespace SnackSeeker.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly SnacksDbContext _context;
 
-
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, SnacksDbContext context)
         {
             _logger = logger;
+            _context = context;
         }
 
         public IActionResult Index()
-        {
-            return RedirectToAction("PreferenceIndex", "Snack");
-        }
-
-        public IActionResult Privacy()
         {
             return View();
         }

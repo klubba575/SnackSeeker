@@ -5,24 +5,6 @@
 
 @model RestaurantRoot
 
-@*<h1>List of Reviews</h1>
-
-<table class=" table table-bordered">
-        <tr>
-            <th>Restaurant Name></th>
-            <th>Review of Price</th>
-            <th>Review of Type 1</th>
-            <th>Review of Type 2</th>
-            <th>Review of Type 3</th>
-
-        </tr>
-        @{
-            foreach (Review review in Model)
-            {
-                if (User.FindFirst(ClaimTypes.NameIdentifier))
-            }
-        }
-    </table>*@
 <h1>Enter Your Review of @Model.name!</h1>
 <form action="../Review/ReviewAdd" method="post">
     <input type="hidden" name="UserId" value="@User.FindFirst(ClaimTypes.NameIdentifier).Value" />
