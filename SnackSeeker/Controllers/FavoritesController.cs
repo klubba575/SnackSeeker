@@ -47,6 +47,7 @@ namespace SnackSeeker.Controllers
         {
             //Get the currently logged-in user userID
             string id = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            //Acquire the current user's Reviewed Restaurants and put them in a List
             var reviews = _context.Review.Where(x => x.UserId == id).ToList();
 
             Review favRestaurant = new Review();
@@ -57,7 +58,7 @@ namespace SnackSeeker.Controllers
                     favRestaurant = review;
                 }
             }
-
+            //Create the new Favorite
             FavoritesList favorites = new FavoritesList
             {
                 RestaurantName = name,
@@ -65,15 +66,17 @@ namespace SnackSeeker.Controllers
                 Rating = favRestaurant.ReviewOfRating,
                 UserId = id
             };
-
+            //Add the favorite to the database and save it
             _context.FavoritesList.Add(favorites);
             _context.SaveChanges();
             return RedirectToAction("DisplayFavorites");
         }
-
+        //Remove a favorite int id is the id of the specific favorite to remove
         public IActionResult RemoveFavorite(int id)
         {
+            //Look through the FavoritesList and find the favorite with the passed id
             var foundFav = _context.FavoritesList.Find(id);
+            //remove the favorite and save the database
             _context.FavoritesList.Remove(foundFav);
             _context.SaveChanges();
 
