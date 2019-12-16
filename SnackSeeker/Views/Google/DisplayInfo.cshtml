@@ -6,11 +6,6 @@
 
 <h1>Location Display!</h1>
 
-<form action="../Google/DisplayInfo" method="post">
-    <input type="text" name="location" value="" />
-    <input type="submit" value="Submit!" />
-</form>
-
 
 @if (Model != null)
 {
@@ -24,8 +19,8 @@
     <p>Welcome to @Model</p>
 
 
-    <h3>Go Find Snacks?</h3>
-    <form action="../Snack/SearchCategory" method="post">
+    <h3>Want Something Different?</h3>
+    <form action="../Snack/SearchCategory" method="get">
         <input type="submit" value="Let's Go!" />
     </form>
 }
