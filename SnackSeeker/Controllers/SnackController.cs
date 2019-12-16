@@ -89,7 +89,7 @@ namespace SnackSeeker.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> SearchCategory(string tag, string Price1, string Price2, string Price3, string Price4)
+        public async Task<IActionResult> SearchCategory(string tag, string Price1, string Price2, string Price3, string Price4, string random)
         {
 
             List<string> checkPrice = new List<string>() { Price1, Price2, Price3, Price4 };
@@ -104,19 +104,36 @@ namespace SnackSeeker.Controllers
 			}
 			multiplePrices = multiplePrices.TrimEnd(',');
 
-
 			string id = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             var categories = _context.Preferences.Where(x => x.UserId == id).ToList();
+            List<Preferences> preferences = new List<Preferences>();
+            HttpResponseMessage tagResponse;
 
-            var sortedList = categories.OrderByDescending(x => x.Rating).ToList();
-			HttpResponseMessage tagResponse;
+            if (random != null)
+            {
+                Random rnd = new Random();
+                int category1 = rnd.Next(0, categories.Count() - 1);
+                preferences.Add(categories[category1]);
+                categories.RemoveAt(category1);
+                int category2 = rnd.Next(0, categories.Count() - 1);
+                preferences.Add(categories[category2]);
+                categories.RemoveAt(category2);
+                int category3 = rnd.Next(0, categories.Count() - 1);
+                preferences.Add(categories[category3]);
+                categories.RemoveAt(category3);
+            }
+            else
+            {
+                preferences = categories.OrderByDescending(x => x.Rating).ToList();
+            }
+
 			if (multiplePrices.Length == 0)
 			{
-				tagResponse = await _client.GetAsync($"businesses/search?location={tag}&categories={sortedList[0].Name},{sortedList[1].Name},{sortedList[2].Name}");
+				tagResponse = await _client.GetAsync($"businesses/search?location={tag}&categories={preferences[0].Name},{preferences[1].Name},{preferences[2].Name}");
 			}
 			else
 			{
-				tagResponse = await _client.GetAsync($"businesses/search?location={tag}&categories={sortedList[0].Name},{sortedList[1].Name},{sortedList[2].Name}&price={multiplePrices}");
+				tagResponse = await _client.GetAsync($"businesses/search?location={tag}&categories={preferences[0].Name},{preferences[1].Name},{preferences[2].Name}&price={multiplePrices}");
 			}			
 			var tagResults = await tagResponse.Content.ReadAsAsync<BusinessRoot>();
             return View("ListCategory", tagResults);
