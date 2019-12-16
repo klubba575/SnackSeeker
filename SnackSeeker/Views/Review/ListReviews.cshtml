@@ -32,7 +32,11 @@
     <td>@review.Type3Name</td>
     <td align="center">@review.ReviewOfType3</td>
     <td align="center">@review.ReviewOfRating</td>
-    
+   <td><form action="../Review/ReviewCheck" method="post">
+           <input type="hidden" name="BusinessId" value="@review.RestaurantId" />
+    <input type="submit" value="Update Review" />
+
+</form></td> 
 </tr>
     }
 </table>
