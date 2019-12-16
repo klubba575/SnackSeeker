@@ -27,17 +27,34 @@
 <form action="../Review/ReviewAdd" method="post">
     <input type="hidden" name="UserId" value="@User.FindFirst(ClaimTypes.NameIdentifier).Value" />
     <input type="hidden" name="RestaurantId" value="@Model.id" />
-    <input type="hidden" name="Type1Name" value="@Model.categories[0].title" />
-    <input type="hidden" name="Type2Name" value="@Model.categories[1].title" />
-    <input type="hidden" name="Type3Name" value="@Model.categories[2].title" />
+    @for (int i = 0, x = 1; i < Model.categories.Count; i++, x++)
+    {
+        
+        @*@if (Model.categories[0].title != null)
+            {*@
+        <input type="hidden" name=@($"Type{x}Name") value="@Model.categories[i].title" />
+        @*}
+            @if (Model.categories[1].title != null)
+            {
+            <input type="hidden" name="Type2Name" value="@Model.categories[1].title" />
+            }
+            @if (Model.categories[2].title != null)
+            {
+            <input type="hidden" name="Type3Name" value="@Model.categories[2].title" />
+            }*@
+    }
     <label>Price Review</label>
     <input type="number" name="ReviewOfPrice" value="" min="1" max="4" /> <br />
-    <label>Review Of @Model.categories[0].title</label>
-    <input type="number" name="ReviewOfType1" value="" min="1" max="5" /><br />
-    <label>Review Of @Model.categories[1].title</label>
-    <input type="number" name="ReviewOfType2" value="" min="1" max="5" /><br />
-    <label>Review Of @Model.categories[2].title</label>
-    <input type="number" name="ReviewOfType3" value="" min="1" max="5" /><br />
+    @for (int i = 0, x = 1; i < Model.categories.Count; i++, x++)
+    {
+        <label>Review Of @Model.categories[i].title</label>
+        <input type="number" name=@($"ReviewOfType{x}") value="" min="1" max="5" /><br />
+    }
+
+    @*<label>Review Of @Model.categories[1].title</label>
+    <input type="number" name="ReviewOfType2" value="" min="1" max="5" /><br />*@
+    @*<label>Review Of @Model.categories[2].title</label>
+        <input type="number" name="ReviewOfType3" value="" min="1" max="5" /><br />*@
     <label>Review of @Model.name</label>
     <input type="number" name="ReviewOfRating" value="" min="1" max="5" /><br />
     <input type="hidden" name="RestaurantName" value="@Model.name" />

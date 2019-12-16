@@ -15,22 +15,15 @@ namespace SnackSeeker.Controllers
 
         public GoogleController(IHttpClientFactory client, IConfiguration configuration)
         {
-            _googleKey = configuration.GetSection("ApiKeys")["GoogleApi"];
-            _client = client.CreateClient();
-            _client.BaseAddress = new Uri("https://www.google.com/maps/embed/v1/");
-        }
-        [HttpGet]
-        public IActionResult DisplayInfo()
-        {
-            return View();
-        }
-        [HttpPost]
-        public IActionResult DisplayInfo(string location, string name)
-        {
-            string both = $"{name}, {location}";
-            ViewData["hidden"] = _googleKey;
-            return View((object)both);
-        }
+			string both = $"{name}, {location}";
+			if (name == null)
+			{
+				both = $"{location}";
+			}
+			
+			ViewData["hidden"] = _googleKey;
+			return View((object)both);
+		}
 
     }
 

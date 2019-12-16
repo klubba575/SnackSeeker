@@ -19,31 +19,31 @@ namespace SnackSeeker.Controllers
         private readonly SnacksDbContext _context;
 
 
-        public ReviewController(IConfiguration configuration, SnacksDbContext context)
-        {
-            _yelpKey = configuration.GetSection("ApiKeys")["YelpApi"];
-            _client = new HttpClient();
-            _client.BaseAddress = new Uri("https://api.yelp.com/v3/");
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _yelpKey);
-            _context = context;
-        }
-        public async Task<IActionResult> ReviewCheck(string id)
-        {
+		public ReviewController(IConfiguration configuration, SnacksDbContext context)
+		{
+			_yelpKey = configuration.GetSection("ApiKeys")["YelpApi"];
+			_client = new HttpClient();
+			_client.BaseAddress = new Uri("https://api.yelp.com/v3/");
+			_client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _yelpKey);
+			_context = context;
+		}
+		public async Task<IActionResult> ReviewCheck(string BusinessId)
+		{
 
-            string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            var reviews = _context.Review.ToList();
-            var reviewResponse = await _client.GetAsync($"businesses/{id}");
-            var results = await reviewResponse.Content.ReadAsAsync<RestaurantRoot>();
-            foreach (var review in reviews)
-            {
-                if (review.RestaurantId == id)
-                {
-                    ReviewModel updateReview = new ReviewModel();
-                    updateReview.Restaurant = results;
-                    updateReview.UpdateRestaurantReview = review;
-                    return View("ReviewChange", updateReview);
-                }
-            }
+			string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+			var reviews = _context.Review.ToList();
+			var reviewResponse = await _client.GetAsync($"businesses/{BusinessId}");
+			var results = await reviewResponse.Content.ReadAsAsync<RestaurantRoot>();
+			foreach (var review in reviews)
+			{
+				if (review.RestaurantId == BusinessId)
+				{
+					ReviewModel updateReview = new ReviewModel();
+					updateReview.Restaurant = results;
+					updateReview.UpdateRestaurantReview = review;
+					return View("ReviewChange", updateReview);
+				}
+			}
 
 
             return View("ReviewAdd", results);
