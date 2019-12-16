@@ -163,16 +163,7 @@ namespace SnackSeeker.Controllers
 
             if (random != null)
             {
-                Random rnd = new Random();
-                int category1 = rnd.Next(0, categories.Count() - 1);
-                preferences.Add(categories[category1]);
-                categories.RemoveAt(category1);
-                int category2 = rnd.Next(0, categories.Count() - 1);
-                preferences.Add(categories[category2]);
-                categories.RemoveAt(category2);
-                int category3 = rnd.Next(0, categories.Count() - 1);
-                preferences.Add(categories[category3]);
-                categories.RemoveAt(category3);
+                preferences = RandomizeThreeTimes();
             }
             else
             {
@@ -195,5 +186,45 @@ namespace SnackSeeker.Controllers
 		{
 			return View(result);
 		}
+
+        public string RandomizeAll()
+        {
+            var categories = Categories.Category;
+            var rand = new Random();
+            int selected = rand.Next(categories.Count);
+            return categories[selected];
+        }
+
+        public List<Preferences> RandomizeThreeTimes()
+        {
+            List<string> categories = new List<string>();
+            string newCategory = "";
+            while (categories.Count != 3)
+            {
+                newCategory = RandomizeAll();
+                if (!categories.Contains(newCategory))
+                {
+                    categories.Add(newCategory);
+                }
+            }
+            List<Preferences> prefs = new List<Preferences>();
+            Preferences newPreference1 = new Preferences();
+            Preferences newPreference2 = new Preferences();
+            Preferences newPreference3 = new Preferences();
+            newPreference1.UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            newPreference1.Rating = 3;
+            newPreference1.Name = categories[0];
+            newPreference2.UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            newPreference2.Rating = 3;
+            newPreference2.Name = categories[1];
+            newPreference3.UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            newPreference3.Rating = 3;
+            newPreference3.Name = categories[2];
+            prefs.Add(newPreference1);
+            prefs.Add(newPreference2);
+            prefs.Add(newPreference3);
+
+            return prefs;
+        }
 	}
 }
