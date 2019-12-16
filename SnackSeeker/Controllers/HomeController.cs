@@ -22,7 +22,7 @@ namespace SnackSeeker.Controllers
 
         public IActionResult Index()
         {
-            return RedirectToAction("PreferenceIndex", "Snack");
+            return View();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

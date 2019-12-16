@@ -25,14 +25,5 @@ namespace SnackSeeker.Controllers
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _yelpKey);
 
         }
-
-        // GET: /<controller>/
-        [HttpGet]
-        public async Task<IActionResult> DisplayInfo()
-        {
-            var response = await _client.GetAsync("businesses/search?location=detroit");
-            var results = await response.Content.ReadAsAsync<BusinessRoot>();
-            return View(results);
-        }
     }
 }
