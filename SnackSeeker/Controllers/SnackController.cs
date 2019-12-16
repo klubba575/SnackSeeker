@@ -63,9 +63,12 @@ namespace SnackSeeker.Controllers
 
 			_context.SaveChanges();
 		}
+        //Method That displays the user's preferences and weights
         public IActionResult PreferenceIndex()
         {
+            //Calculate the Average Price to ensure that it is always as up to date as possible.
             CalcAverage();
+
             var userAve = _context.AspNetUsers.ToList();
             double? userAverage;
             var id = User.FindFirst(ClaimTypes.NameIdentifier).Value;
@@ -149,6 +152,8 @@ namespace SnackSeeker.Controllers
 			ViewBag.Average = userAverage;
 			return View();
 		}
+
+        //method which displays a person
         [HttpPost]
         public async Task<IActionResult> SearchCategory(string tag, string Price1, string Price2, string Price3, string Price4, string random)
         {
