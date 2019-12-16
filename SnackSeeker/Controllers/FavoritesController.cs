@@ -64,7 +64,8 @@ namespace SnackSeeker.Controllers
                 RestaurantName = name,
                 Price = price,
                 Rating = favRestaurant.ReviewOfRating,
-                UserId = id
+                UserId = id,
+                RestaurantId = Id
             };
             //Add the favorite to the database and save it
             _context.FavoritesList.Add(favorites);
