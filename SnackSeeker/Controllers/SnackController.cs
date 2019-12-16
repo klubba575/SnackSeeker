@@ -17,23 +17,27 @@ namespace SnackSeeker.Controllers
 	[Authorize]
     public class SnackController : Controller
     {
-        private readonly ILogger<SnackController> _logger;
+		//Initializing our variables to be used for API and database interaction
         private readonly string _yelpKey;
         private readonly HttpClient _client;
         private readonly SnacksDbContext _context;
-        private readonly double snackAlgo;
 
-        public SnackController(ILogger<SnackController> logger, IConfiguration configuration, SnacksDbContext context)
+		
+        public SnackController(IConfiguration configuration, SnacksDbContext context)
         {
-            _logger = logger;
+			//Dependancy injecting our snacks controller
             _yelpKey = configuration.GetSection("ApiKeys")["YelpApi"];
             _client = new HttpClient();
+			//Setting up the Base address and necessary header for our Yelp API calls
             _client.BaseAddress = new Uri("https://api.yelp.com/v3/");
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _yelpKey);
             _context = context;
         }
+		//Private method that records the average of a user's price reviews from all their reviews in the database
+		//This creates the price average variable to guide the user towards their own usual preference
 		private void CalcAverage()
 		{
+			//Takes all the reviews in the database and puts them into a list
 			var reviews = _context.Review.ToList();
 			double priceAverage = 0;
 			int counter = 0;
@@ -46,6 +50,7 @@ namespace SnackSeeker.Controllers
 				}
 			}
 			priceAverage = priceAverage / counter;
+			//If the user does not have any reviews, this creates a default price average of 1
 			if (double.IsNaN(priceAverage))
 			{
 				priceAverage = 1;
