@@ -46,6 +46,10 @@ namespace SnackSeeker.Controllers
 				}
 			}
 			priceAverage = priceAverage / counter;
+			if (double.IsNaN(priceAverage))
+			{
+				priceAverage = 1;
+			}
 			var id = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 			var user = _context.AspNetUsers.Where(x => x.Id == id).First();
 
