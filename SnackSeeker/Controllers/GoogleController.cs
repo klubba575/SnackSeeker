@@ -28,6 +28,11 @@ namespace SnackSeeker.Controllers
 		public IActionResult DisplayInfo(string location, string name)
         {
 			string both = $"{name}, {location}";
+			if (name == null)
+			{
+				both = $"{location}";
+			}
+			
 			ViewData["hidden"] = _googleKey;
 			return View((object)both);
 		}

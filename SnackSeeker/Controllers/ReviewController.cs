@@ -27,16 +27,16 @@ namespace SnackSeeker.Controllers
 			_client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _yelpKey);
 			_context = context;
 		}
-		public async Task<IActionResult> ReviewCheck(string id)
+		public async Task<IActionResult> ReviewCheck(string BusinessId)
 		{
 
 			string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 			var reviews = _context.Review.ToList();
-			var reviewResponse = await _client.GetAsync($"businesses/{id}");
+			var reviewResponse = await _client.GetAsync($"businesses/{BusinessId}");
 			var results = await reviewResponse.Content.ReadAsAsync<RestaurantRoot>();
 			foreach (var review in reviews)
 			{
-				if (review.RestaurantId == id)
+				if (review.RestaurantId == BusinessId)
 				{
 					ReviewModel updateReview = new ReviewModel();
 					updateReview.Restaurant = results;

@@ -53,7 +53,6 @@ namespace SnackSeeker.Controllers
 			_context.Entry(user).State = EntityState.Modified;
 
 			_context.SaveChanges();
-
 		}
         public IActionResult PreferenceIndex()
         {
@@ -76,63 +75,11 @@ namespace SnackSeeker.Controllers
             }
             return View(userPreferences);
         }
-        [HttpGet]
-        public IActionResult SearchCategory()
-        {
-            CalcAverage();
-            var userAve = _context.AspNetUsers.ToList();
-            double? userAverage;
-            var userid = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            var user = _context.AspNetUsers.Where(x => x.Id == userid).First();
-            userAverage = user.PriceAverage;
-            ViewBag.Average = userAverage;
-            return View();
-        }
-        [HttpPost]
-        public async Task<IActionResult> SearchCategory(string tag, string Price1, string Price2, string Price3, string Price4)
-        {
-
-            List<string> checkPrice = new List<string>() { Price1, Price2, Price3, Price4 };
-			
-			var multiplePrices = "";
-			foreach (var price in checkPrice)
-			{
-				if (price != null)
-				{
-					multiplePrices += $"{price},";
-				}
-			}
-			multiplePrices = multiplePrices.TrimEnd(',');
-
-
-			string id = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            var categories = _context.Preferences.Where(x => x.UserId == id).ToList();
-
-            var sortedList = categories.OrderByDescending(x => x.Rating).ToList();
-			HttpResponseMessage tagResponse;
-			if (multiplePrices.Length == 0)
-			{
-				tagResponse = await _client.GetAsync($"businesses/search?location={tag}&categories={sortedList[0].Name},{sortedList[1].Name},{sortedList[2].Name}");
-			}
-			else
-			{
-				tagResponse = await _client.GetAsync($"businesses/search?location={tag}&categories={sortedList[0].Name},{sortedList[1].Name},{sortedList[2].Name}&price={multiplePrices}");
-			}			
-			var tagResults = await tagResponse.Content.ReadAsAsync<BusinessRoot>();
-            return View("ListCategory", tagResults);
-        }
-
-        public IActionResult ListCategory(BusinessRoot result)
-        {
-            return View(result);
-        }
-
         //TODO: Make a model for preference history including a List of Review and Categories
         public IActionResult PreferenceHistory()
         {
             return View();
         }
-
         public IActionResult UserPreference(string weight)
         {
             var findPreference = _context.Preferences.Find("UserPreference");
@@ -154,7 +101,6 @@ namespace SnackSeeker.Controllers
 
             return RedirectToAction("PreferenceIndex");
         }
-
         public IActionResult PreferenceAdd(string category, int rating)
         {
             Preferences newPreferences = new Preferences();
@@ -166,8 +112,7 @@ namespace SnackSeeker.Controllers
             _context.SaveChanges();
             return RedirectToAction("PreferenceIndex");
         }
-
-        public IActionResult PreferenceChange(string change, int id, int rating)
+       public IActionResult PreferenceChange(string change, int id, int rating)
         {
             var pref = _context.Preferences.Find(id);
             if (change == "Delete")
@@ -183,5 +128,55 @@ namespace SnackSeeker.Controllers
             _context.SaveChanges();
             return RedirectToAction("PreferenceIndex");
         }
-    }
+		[HttpGet]
+		public IActionResult SearchCategory()
+		{
+			CalcAverage();
+			var userAve = _context.AspNetUsers.ToList();
+			double? userAverage;
+			var userid = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+			var user = _context.AspNetUsers.Where(x => x.Id == userid).First();
+			userAverage = user.PriceAverage;
+			ViewBag.Average = userAverage;
+			return View();
+		}
+		[HttpPost]
+		public async Task<IActionResult> SearchCategory(string tag, string Price1, string Price2, string Price3, string Price4)
+		{
+
+			List<string> checkPrice = new List<string>() { Price1, Price2, Price3, Price4 };
+
+			var multiplePrices = "";
+			foreach (var price in checkPrice)
+			{
+				if (price != null)
+				{
+					multiplePrices += $"{price},";
+				}
+			}
+			multiplePrices = multiplePrices.TrimEnd(',');
+
+
+			string id = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+			var categories = _context.Preferences.Where(x => x.UserId == id).ToList();
+
+			var sortedList = categories.OrderByDescending(x => x.Rating).ToList();
+			HttpResponseMessage tagResponse;
+			if (multiplePrices.Length == 0)
+			{
+				tagResponse = await _client.GetAsync($"businesses/search?location={tag}&categories={sortedList[0].Name},{sortedList[1].Name},{sortedList[2].Name}");
+			}
+			else
+			{
+				tagResponse = await _client.GetAsync($"businesses/search?location={tag}&categories={sortedList[0].Name},{sortedList[1].Name},{sortedList[2].Name}&price={multiplePrices}");
+			}
+			var tagResults = await tagResponse.Content.ReadAsAsync<BusinessRoot>();
+			return View("ListCategory", tagResults);
+		}
+
+		public IActionResult ListCategory(BusinessRoot result)
+		{
+			return View(result);
+		}
+	}
 }
