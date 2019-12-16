@@ -140,43 +140,91 @@ namespace SnackSeeker.Controllers
 			ViewBag.Average = userAverage;
 			return View();
 		}
-		[HttpPost]
-		public async Task<IActionResult> SearchCategory(string tag, string Price1, string Price2, string Price3, string Price4)
-		{
+        [HttpPost]
+        public async Task<IActionResult> SearchCategory(string tag, string Price1, string Price2, string Price3, string Price4, string random)
+        {
 
-			List<string> checkPrice = new List<string>() { Price1, Price2, Price3, Price4 };
+            List<string> checkPrice = new List<string>() { Price1, Price2, Price3, Price4 };
 
-			var multiplePrices = "";
-			foreach (var price in checkPrice)
-			{
-				if (price != null)
-				{
-					multiplePrices += $"{price},";
-				}
-			}
-			multiplePrices = multiplePrices.TrimEnd(',');
+            var multiplePrices = "";
+            foreach (var price in checkPrice)
+            {
+                if (price != null)
+                {
+                    multiplePrices += $"{price},";
+                }
+            }
+            multiplePrices = multiplePrices.TrimEnd(',');
 
+            string id = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var categories = _context.Preferences.Where(x => x.UserId == id).ToList();
+            List<Preferences> preferences = new List<Preferences>();
+            HttpResponseMessage tagResponse;
 
-			string id = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-			var categories = _context.Preferences.Where(x => x.UserId == id).ToList();
+            if (random != null)
+            {
+                preferences = RandomizeThreeTimes();
+            }
+            else
+            {
+                preferences = categories.OrderByDescending(x => x.Rating).ToList();
+            }
 
-			var sortedList = categories.OrderByDescending(x => x.Rating).ToList();
-			HttpResponseMessage tagResponse;
-			if (multiplePrices.Length == 0)
-			{
-				tagResponse = await _client.GetAsync($"businesses/search?location={tag}&categories={sortedList[0].Name},{sortedList[1].Name},{sortedList[2].Name}");
-			}
-			else
-			{
-				tagResponse = await _client.GetAsync($"businesses/search?location={tag}&categories={sortedList[0].Name},{sortedList[1].Name},{sortedList[2].Name}&price={multiplePrices}");
-			}
-			var tagResults = await tagResponse.Content.ReadAsAsync<BusinessRoot>();
-			return View("ListCategory", tagResults);
-		}
+            if (multiplePrices.Length == 0)
+            {
+                tagResponse = await _client.GetAsync($"businesses/search?location={tag}&categories={preferences[0].Name},{preferences[1].Name},{preferences[2].Name}");
+            }
+            else
+            {
+                tagResponse = await _client.GetAsync($"businesses/search?location={tag}&categories={preferences[0].Name},{preferences[1].Name},{preferences[2].Name}&price={multiplePrices}");
+            }
+            var tagResults = await tagResponse.Content.ReadAsAsync<BusinessRoot>();
+            return View("ListCategory", tagResults);
+        }
 
-		public IActionResult ListCategory(BusinessRoot result)
+        public IActionResult ListCategory(BusinessRoot result)
 		{
 			return View(result);
 		}
+
+        public string RandomizeAll()
+        {
+            var categories = Categories.Category;
+            var rand = new Random();
+            int selected = rand.Next(categories.Count);
+            return categories[selected];
+        }
+
+        public List<Preferences> RandomizeThreeTimes()
+        {
+            List<string> categories = new List<string>();
+            string newCategory = "";
+            while (categories.Count != 3)
+            {
+                newCategory = RandomizeAll();
+                if (!categories.Contains(newCategory))
+                {
+                    categories.Add(newCategory);
+                }
+            }
+            List<Preferences> prefs = new List<Preferences>();
+            Preferences newPreference1 = new Preferences();
+            Preferences newPreference2 = new Preferences();
+            Preferences newPreference3 = new Preferences();
+            newPreference1.UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            newPreference1.Rating = 3;
+            newPreference1.Name = categories[0];
+            newPreference2.UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            newPreference2.Rating = 3;
+            newPreference2.Name = categories[1];
+            newPreference3.UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            newPreference3.Rating = 3;
+            newPreference3.Name = categories[2];
+            prefs.Add(newPreference1);
+            prefs.Add(newPreference2);
+            prefs.Add(newPreference3);
+
+            return prefs;
+        }
 	}
 }
