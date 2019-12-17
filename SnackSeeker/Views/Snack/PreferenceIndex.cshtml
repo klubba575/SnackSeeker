@@ -7,15 +7,39 @@
 
 <h1>Preference List</h1>
 
-<form action="../Snack/UserPreference" method="post">
-    <h3>Add Your User Preferences!</h3>
-    @*<select name="weight">
-            <option value="1.0">Rating</option>
-            <option value="2.0">Type</option>
-            <option value="3.0">Price</option>
-        </select>*@
-    @*<input type="submit" value="Submit" />*@
+<h3>Add Your User Preferences!</h3>
+@if (Model.Count < 3)
+{
+    <p style="color:red">Please add at least 3 Preferences!</p>
+}
+@{
+    List<string> ranCat = new List<string>();
+}
+
+@foreach (var pref in Model)
+{
+    ranCat.Add(pref.Name);
+}
+
+@if (Model.Count == 0)
+{
+<form action="../Snack/PreferenceIndex" method="post">
+    <class name="category">
+        @foreach (var category in Categories.Category)
+        {
+            if (!ranCat.Contains(category))
+            {
+                ranCat.Add(category);
+            }
+        }
+    </class>
+    <label>Choose 3 Random Preferences for me!</label>
+    <input type="checkbox" name="random" value="Random" />
+    <input type="submit" value="Submit" />
+>>>>>>> 92d8013189af77fc934684391c1fae828cfe7846
 </form>
+}
+
 @if (Model != null)
 {
     <table class="table table-bordered">
@@ -41,6 +65,7 @@
     userCats.Add(pref.Name);
 }
 
+<h5>Choose categories in form below:</h5>
 <form action="../Snack/PreferenceAdd">
     <select name="category">
         @foreach (var category in Categories.Category)
@@ -71,9 +96,9 @@
     <input type="number" name="rating" min="1" max="5" />
     <input type="submit" value="Change" />
 </form>
+
 @if (ViewBag != null)
 {
-
     <p>@ViewBag.Average.ToString("0.#")  User Price Preference</p>
 }
 @if (ViewBag.highcategory != null)

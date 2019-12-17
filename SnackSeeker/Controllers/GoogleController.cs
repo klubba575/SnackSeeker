@@ -19,6 +19,8 @@ namespace SnackSeeker.Controllers
             _client = client.CreateClient();
             _client.BaseAddress = new Uri("https://www.google.com/maps/embed/v1/");
         }
+		//Method to display Imbedded map from Google API including the location from the user
+		//and if applicable, the business name.
         [HttpGet]
         public IActionResult DisplayInfo()
         {
