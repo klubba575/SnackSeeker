@@ -24,7 +24,7 @@ namespace SnackSeeker.Models
 		public object is_closed { get; set; }
 		public string start { get; set; }
 		public string end { get; set; }
-		public bool is_overnight { get; set; }
+		public bool? is_overnight { get; set; }
 	}
 	public class RestaurantRoot
 	{

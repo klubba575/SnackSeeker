@@ -63,7 +63,7 @@ namespace SnackSeeker.Controllers
 
 			_context.SaveChanges();
 		}
-        public IActionResult PreferenceIndex()
+        public IActionResult PreferenceIndex(string random)
         {
             CalcAverage();
             var userAve = _context.AspNetUsers.ToList();
@@ -73,54 +73,34 @@ namespace SnackSeeker.Controllers
             userAverage = user[0].PriceAverage;
             ViewBag.Average = userAverage;
 
-            var preferences = _context.Preferences.ToList();
             var userPreferences = new List<Preferences>();
-            foreach (var pref in preferences)
+            if(random != null) 
             {
-                if (pref.UserId == User.FindFirst(ClaimTypes.NameIdentifier).Value)
+                userPreferences = RandomizeThreeTimes();
+                foreach(var ranPref in userPreferences)
                 {
-                    userPreferences.Add(pref);
+                    AddPreference(ranPref.Name, (int)ranPref.Rating);
                 }
             }
-            return View(userPreferences);
-        }
-        //TODO: Make a model for preference history including a List of Review and Categories
-        public IActionResult PreferenceHistory()
-        {
-            return View();
-        }
-        public IActionResult UserPreference(string weight)
-        {
-            var findPreference = _context.Preferences.Find("UserPreference");
-            if(findPreference == null)
-            {
-                Preferences userPreference = new Preferences();
-                userPreference.UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-                userPreference.Name = "UserPreference";
-                userPreference.Rating = double.Parse(weight);
-                _context.Preferences.Add(userPreference);
-            }
-            else
-            {
-                findPreference.Rating = double.Parse(weight);
-                _context.Entry(findPreference).State = EntityState.Modified;
-                _context.Update(findPreference);
-            }
-            _context.SaveChanges();
 
-            return RedirectToAction("PreferenceIndex");
+            return View(_context.Preferences.Where(x => x.UserId == id).ToList());
         }
         public IActionResult PreferenceAdd(string category, int rating)
+        {
+            AddPreference(category, rating);
+            return RedirectToAction("PreferenceIndex");
+        }
+
+        public void AddPreference(string category, int rating)
         {
             Preferences newPreferences = new Preferences();
             newPreferences.Name = category;
             newPreferences.Rating = rating;
             newPreferences.UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            var findCategory = _context.Preferences.ToList();
             _context.Preferences.Add(newPreferences);
             _context.SaveChanges();
-            return RedirectToAction("PreferenceIndex");
         }
+
        public IActionResult PreferenceChange(string change, int id, int rating)
         {
             var pref = _context.Preferences.Find(id);

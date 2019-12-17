@@ -7,31 +7,36 @@
 
 <h1>Preference List</h1>
 
-<form action="../Snack/UserPreference" method="post">
-    <h3>Add Your User Preferences!</h3>
-    @*<select name="weight">
-        <option value="1.0">Rating</option>
-        <option value="2.0">Type</option>
-        <option value="3.0">Price</option>
-    </select>*@
-    @*<input type="submit" value="Submit" />*@
-</form>
+<h3>Add Your User Preferences!</h3>
+@if (Model.Count < 3)
+{
+    <p style="color:red">Please add at least 3 Preferences!</p>
+}
+@if (Model.Count == 0)
+{
+    <form action="../Snack/PreferenceIndex" method="post">
+        <label>Choose 3 Random Preferences for me!</label>
+        <input type="checkbox" name="random" value="Random" />
+        <input type="submit" value="Submit" />
+    </form>
+}
+
 @if (Model != null)
 {
-<table class="table table-bordered">
-    <tr>
-        <th>User Preference</th>
-        <th>Rating</th>
-    </tr>
-    @foreach (var pref in Model)
-    {
+    <table class="table table-bordered">
         <tr>
-            <td>@pref.Name</td>
-            <td>@pref.Rating</td>
+            <th>User Preference</th>
+            <th>Rating</th>
         </tr>
-    }
+        @foreach (var pref in Model)
+        {
+            <tr>
+                <td>@pref.Name</td>
+                <td>@pref.Rating</td>
+            </tr>
+        }
 
-</table>
+    </table>
 }
 @{
     List<string> userCats = new List<string>();
@@ -41,6 +46,7 @@
     userCats.Add(pref.Name);
 }
 
+<h5>Choose categories in form below:</h5>
 <form action="../Snack/PreferenceAdd">
     <select name="category">
         @foreach (var category in Categories.Category)
@@ -53,15 +59,15 @@
             }
         }
     </select>
-    <input type="number" name="Rating" min="1" max="5"/>
-    <input type="submit" value="Submit"/>
+    <input type="number" name="Rating" min="1" max="5" />
+    <input type="submit" value="Submit" />
 </form>
 
 <form action="../Snack/PreferenceChange" method="post">
     <label>Update</label>
-    <input type="radio" name="change" value="Update"/>
+    <input type="radio" name="change" value="Update" />
     <label>Delete</label>
-    <input type="radio" name="change" value="Delete"/>
+    <input type="radio" name="change" value="Delete" />
     <select name="id">
         @foreach (var prefs in Model)
         {
@@ -69,10 +75,10 @@
         }
     </select>
     <input type="number" name="rating" min="1" max="5" />
-    <input type="submit" value="Change"/>
+    <input type="submit" value="Change" />
 </form>
+
 @if (ViewBag != null)
 {
-
-<p>@ViewBag.Average.ToString("0.#")  User Price Preference</p>
+    <p>@ViewBag.Average.ToString("0.#")  User Price Preference</p>
 }
