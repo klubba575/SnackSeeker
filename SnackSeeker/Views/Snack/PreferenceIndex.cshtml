@@ -36,7 +36,6 @@
     <label>Choose 3 Random Preferences for me!</label>
     <input type="checkbox" name="random" value="Random" />
     <input type="submit" value="Submit" />
->>>>>>> 92d8013189af77fc934684391c1fae828cfe7846
 </form>
 }
 
@@ -100,11 +99,4 @@
 @if (ViewBag != null)
 {
     <p>@ViewBag.Average.ToString("0.#")  User Price Preference</p>
-}
-@if (ViewBag.highcategory != null)
-{
-    for (int i = 0; i < ViewBag.highcategory.Length; i++)
-    {
-        <p>Highest Preference Category From Reviews: @ViewBag.highcategory[i]  </p>
-    }
 }

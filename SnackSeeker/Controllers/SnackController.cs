@@ -63,7 +63,7 @@ namespace SnackSeeker.Controllers
 			_context.SaveChanges();
 		}
 		//Home Page for our Site, shows all our User's Preferences
-        public IActionResult PreferenceIndex()
+        public IActionResult PreferenceIndex(string random)
         {
 			//Method to show the logged in user's average price based on reviews
             CalcAverage();
@@ -77,32 +77,37 @@ namespace SnackSeeker.Controllers
 			ViewBag.highcategory = TempData["highcategory"];
 
 			//Takes the user's preferences from the database and displays them as a List
-			var preferences = _context.Preferences.ToList();
             var userPreferences = new List<Preferences>();
-            foreach (var pref in preferences)
+            if(random != null) 
             {
-                if (pref.UserId == User.FindFirst(ClaimTypes.NameIdentifier).Value)
+                userPreferences = RandomizeThreeTimes();
+                foreach(var ranPref in userPreferences)
                 {
-                    userPreferences.Add(pref);
+                    AddPreference(ranPref.Name, (int)ranPref.Rating);
                 }
             }
-            return View(userPreferences);
+
+            return View(_context.Preferences.Where(x => x.UserId == id).ToList());
         }
 		//Method that adds preferences to each user's preferences in the database
         public IActionResult PreferenceAdd(string category, int rating)
+        {
+            AddPreference(category, rating);
+            return RedirectToAction("PreferenceIndex");
+        }
+
+        public void AddPreference(string category, int rating)
         {
             Preferences newPreferences = new Preferences();
             newPreferences.Name = category;
             newPreferences.Rating = rating;
             newPreferences.UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-        
-			var findCategory = _context.Preferences.ToList();
             _context.Preferences.Add(newPreferences);
             _context.SaveChanges();
-            return RedirectToAction("PreferenceIndex");
         }
 		//Method that allows you to update or delete your preferences
 		//Both options change that user's data in the database and redisplays the Preference Index accordingly
+
        public IActionResult PreferenceChange(string change, int id, int rating)
         {
 			//Delete a user preference
@@ -136,7 +141,7 @@ namespace SnackSeeker.Controllers
 		}
         [HttpPost]
 		//Post Method that uses user filter along with the Yelp API to bring up snack results based on the filters
-        public async Task<IActionResult> SearchCategory(string tag, string Price1, string Price2, string Price3, string Price4, string random, string sortbyName, string sortbyPrice, string sortbyRating)
+        public async Task<IActionResult> SearchCategory(string tag, string Price1, string Price2, string Price3, string Price4, string random, string sortBy)
         {
 
             List<string> checkPrice = new List<string>() { Price1, Price2, Price3, Price4 };
@@ -178,30 +183,30 @@ namespace SnackSeeker.Controllers
             }
             var tagResults = await tagResponse.Content.ReadAsAsync<BusinessRoot>();
 
-            if (sortbyName != null)
+            if (sortBy == "Name")
             {
                 tagResults.businesses.Sort((x, y) => string.Compare(x.name, y.name));
             }
-            else if (sortbyName != null)
+            else if (sortBy == "NameReverse")
             {
                 tagResults.businesses.Sort((x, y) => string.Compare(x.name, y.name));
                 tagResults.businesses.Reverse();
             }
-            else if(sortbyPrice != null)
+            else if(sortBy == "Price")
             {
                 tagResults.businesses.Sort((x, y) => string.Compare(x.price, y.price));
             }
-            else if (sortbyPrice != null)
+            else if (sortBy == "PriceReverse")
             {
                 tagResults.businesses.Sort((x, y) => string.Compare(x.price, y.price));
                 tagResults.businesses.Reverse();
 
             }
-            else if (sortbyRating != null)
+            else if (sortBy == "Rating")
             {
                 tagResults.businesses.Sort((x, y) => x.rating.CompareTo(y.rating));
             }
-            else if(sortbyRating != null)
+            else if(sortBy == "RatingReverse")
             {
                 tagResults.businesses.Sort((x, y) => x.rating.CompareTo(y.rating));
                 tagResults.businesses.Reverse();

@@ -32,11 +32,21 @@
     <td>@review.Type3Name</td>
     <td align="center">@review.ReviewOfType3</td>
     <td align="center">@review.ReviewOfRating</td>
-   <td><form action="../Review/ReviewCheck" method="post">
-           <input type="hidden" name="BusinessId" value="@review.RestaurantId" />
-    <input type="submit" value="Update Review" />
+    <td>
+        <form action="../Review/ReviewCheck" method="post">
+            <input type="hidden" name="BusinessId" value="@review.RestaurantId" />
+            <input type="submit" value="Update Review" />
 
-</form></td> 
+        </form>
+    </td>
+    <td>
+        <form action="../Favorites/AddToFavorites" method="post">
+            <input type="hidden" name="Id" value="@review.RestaurantId" />
+            <input type="hidden" name="name" value="@review.RestaurantName" />
+            <input type="hidden" name="price" value="@review.ReviewOfPrice" />
+            <input type="submit" value="Add to Favorites!" />
+        </form>
+    </td>
 </tr>
     }
 </table>

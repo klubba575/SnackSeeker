@@ -18,20 +18,26 @@
     @*Running a foreach loop to show each favorite restaurant in our Model List ListFavorites*@
     @foreach (var fav in Model)
     {
-        <tr>
-            @*Listing the Name, price, and rating in our table, along with a hidden restaurant Id*@
-            <td>@fav.RestaurantName</td>
-            <td>@fav.Price</td>
-            <td>@fav.Rating</td>
-            <td>
-                @*Adding a form that will allow the user to remove a restaurant from their Favorites List*@
-                <form action="../Favorites/RemoveFavorite" method="post">
-                    <input type="hidden" name="id" value="@fav.Id" />
-                    @*Adding a button that allows the user to remove a restaurant from their favorites list*@
-                    <input type="submit" value="Remove Favorite" />
-                </form>
-            </td>
-        </tr>
+<tr>
+    @*Listing the Name, price, and rating in our table, along with a hidden restaurant Id*@
+    <td>@fav.RestaurantName</td>
+    <td>@fav.Price</td>
+    <td>@fav.Rating</td>
+    <td>
+        @*Adding a form that will allow the user to remove a restaurant from their Favorites List*@
+        <form action="../Favorites/RemoveFavorite" method="post">
+            <input type="hidden" name="id" value="@fav.Id" />
+            @*Adding a button that allows the user to remove a restaurant from their favorites list*@
+            <input type="submit" value="Remove Favorite" />
+        </form>
+    </td>
+    <td>
+        <form action="../Review/ReviewCheck" method="post">
+            <input type="hidden" name="BusinessId" value="@fav.RestaurantId" />
+            <input type="submit" value="Submit Review!" />
+        </form>
+    </td>
+</tr>
     }
 </table>
 
