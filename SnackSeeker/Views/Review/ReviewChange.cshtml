@@ -22,12 +22,6 @@
         <label>Review @Model.Restaurant.categories[i].title</label>
         <input type="number" name=@($"Type{x}Name") value="@Model.Restaurant.categories[i].title" min="1" max="5" />
     }
-            @*<label>Review @Model.Restaurant.categories[0].title</label>
-            <input type="number" name="ReviewOfType1" value="@Model.UpdateRestaurantReview.ReviewOfType1" min="1" max="5" />
-            <label>Review @Model.Restaurant.categories[1].title</label>
-            <input type="number" name="ReviewOfType2" value="@Model.UpdateRestaurantReview.ReviewOfType2" min="1" max="5" />
-            <label>Review @Model.Restaurant.categories[2].title</label>
-            <input type="number" name="ReviewOfType3" value="@Model.UpdateRestaurantReview.ReviewOfType3" min="1" max="5" />*@
         <label>Review Rating</label>
         <input type="number" name="ReviewOfRating" value="@Model.UpdateRestaurantReview.ReviewOfRating" min="1" max="5" />
         <input type="submit" value="Change" />

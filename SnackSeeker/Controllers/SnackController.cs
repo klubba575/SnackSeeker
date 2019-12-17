@@ -60,38 +60,43 @@ namespace SnackSeeker.Controllers
 
 			user.PriceAverage = priceAverage;
 			_context.Entry(user).State = EntityState.Modified;
-
 			_context.SaveChanges();
 		}
+		//Home Page for our Site, shows all our User's Preferences
         public IActionResult PreferenceIndex(string random)
         {
+			//Method to show the logged in user's average price based on reviews
             CalcAverage();
             var userAve = _context.AspNetUsers.ToList();
             double? userAverage;
             var id = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             var user = _context.AspNetUsers.Where(x => x.Id == id).ToList();
             userAverage = user[0].PriceAverage;
-            ViewBag.Average = userAverage;
+            
+			ViewBag.Average = userAverage;
+			ViewBag.highcategory = TempData["highcategory"];
 
+			//Takes the user's preferences from the database and displays them as a List
             var userPreferences = new List<Preferences>();
             if(random != null) 
             {
                 userPreferences = RandomizeThreeTimes();
                 foreach(var ranPref in userPreferences)
                 {
-                    AddSomething(ranPref.Name, (int)ranPref.Rating);
+                    AddPreference(ranPref.Name, (int)ranPref.Rating);
                 }
             }
 
             return View(_context.Preferences.Where(x => x.UserId == id).ToList());
         }
+		//Method that adds preferences to each user's preferences in the database
         public IActionResult PreferenceAdd(string category, int rating)
         {
-            AddSomething(category, rating);
+            AddPreference(category, rating);
             return RedirectToAction("PreferenceIndex");
         }
 
-        public void AddSomething(string category, int rating)
+        public void AddPreference(string category, int rating)
         {
             Preferences newPreferences = new Preferences();
             newPreferences.Name = category;
@@ -100,14 +105,18 @@ namespace SnackSeeker.Controllers
             _context.Preferences.Add(newPreferences);
             _context.SaveChanges();
         }
+		//Method that allows you to update or delete your preferences
+		//Both options change that user's data in the database and redisplays the Preference Index accordingly
 
        public IActionResult PreferenceChange(string change, int id, int rating)
         {
+			//Delete a user preference
             var pref = _context.Preferences.Find(id);
             if (change == "Delete")
             {
                 _context.Preferences.Remove(pref);
             }
+			//Update the rating on a user preference
             else if (change == "Update")
             {
                 pref.Rating = rating;
@@ -118,6 +127,7 @@ namespace SnackSeeker.Controllers
             return RedirectToAction("PreferenceIndex");
         }
 		[HttpGet]
+		//Get Method that is used for getting user search filters
 		public IActionResult SearchCategory()
 		{
 			CalcAverage();
@@ -130,11 +140,13 @@ namespace SnackSeeker.Controllers
 			return View();
 		}
         [HttpPost]
-        public async Task<IActionResult> SearchCategory(string tag, string Price1, string Price2, string Price3, string Price4, string random, string sortbyName, string sortbyPrice, string sortbyRating)
+		//Post Method that uses user filter along with the Yelp API to bring up snack results based on the filters
+        public async Task<IActionResult> SearchCategory(string tag, string Price1, string Price2, string Price3, string Price4, string random, string sortBy)
         {
 
             List<string> checkPrice = new List<string>() { Price1, Price2, Price3, Price4 };
-
+			
+			//Option to search for more than one price point
             var multiplePrices = "";
             foreach (var price in checkPrice)
             {
@@ -145,11 +157,13 @@ namespace SnackSeeker.Controllers
             }
             multiplePrices = multiplePrices.TrimEnd(',');
 
+			//Using logged in user's preference List to search
             string id = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             var categories = _context.Preferences.Where(x => x.UserId == id).ToList();
             List<Preferences> preferences = new List<Preferences>();
             HttpResponseMessage tagResponse;
 
+			//Using random, price, alphabetized, or rating preferences to filter our search
             if (random != null)
             {
                 preferences = RandomizeThreeTimes();
@@ -169,42 +183,43 @@ namespace SnackSeeker.Controllers
             }
             var tagResults = await tagResponse.Content.ReadAsAsync<BusinessRoot>();
 
-            if (sortbyName != null)
+            if (sortBy == "Name")
             {
                 tagResults.businesses.Sort((x, y) => string.Compare(x.name, y.name));
             }
-            else if (sortbyName != null)
+            else if (sortBy == "NameReverse")
             {
                 tagResults.businesses.Sort((x, y) => string.Compare(x.name, y.name));
                 tagResults.businesses.Reverse();
             }
-            else if(sortbyPrice != null)
+            else if(sortBy == "Price")
             {
                 tagResults.businesses.Sort((x, y) => string.Compare(x.price, y.price));
             }
-            else if (sortbyPrice != null)
+            else if (sortBy == "PriceReverse")
             {
                 tagResults.businesses.Sort((x, y) => string.Compare(x.price, y.price));
                 tagResults.businesses.Reverse();
 
             }
-            else if (sortbyRating != null)
+            else if (sortBy == "Rating")
             {
                 tagResults.businesses.Sort((x, y) => x.rating.CompareTo(y.rating));
             }
-            else if(sortbyRating != null)
+            else if(sortBy == "RatingReverse")
             {
                 tagResults.businesses.Sort((x, y) => x.rating.CompareTo(y.rating));
                 tagResults.businesses.Reverse();
             }
             return View("ListCategory", tagResults);
         }
-
+		
+		//Method to List out all our restuls
         public IActionResult ListCategory(BusinessRoot result)
 		{
 			return View(result);
 		}
-
+		//Method used to randomize all the different options in our Categories class
         public string RandomizeAll()
         {
             var categories = Categories.Category;
@@ -212,7 +227,8 @@ namespace SnackSeeker.Controllers
             int selected = rand.Next(categories.Count);
             return categories[selected];
         }
-
+		//Method used to give three random categories for a new user if they do not wish to choose their own
+		//Each random preference created is assigned to the logged in user and given a rating of three
         public List<Preferences> RandomizeThreeTimes()
         {
             List<string> categories = new List<string>();

@@ -5,7 +5,7 @@
 @model BusinessRoot
 
 <h1>Here Are Your Recommended Restaurants!</h1>
-<table>
+<table class="table table-bordered">
     @foreach (var business in Model.businesses)
     {
     <tr>
@@ -32,21 +32,7 @@
             </form>
         </td>
         <td>@business.price</td>
-        @{
-            int count = business.categories.Count();
-        }
-        @if (count > 0)
-        {
-            <td>@business.categories[0].alias</td>
-        }
-        @if (count > 1)
-        {
-            <td>@business.categories[1].alias</td>
-        }
-        @if (count > 2)
-        {
-            <td>@business.categories[2].alias</td>
-        }
+        <td>@business.rating</td>
     </tr>
-    }
+   }
 </table>
