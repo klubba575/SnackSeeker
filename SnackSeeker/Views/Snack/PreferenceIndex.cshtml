@@ -41,18 +41,32 @@
 
 @if (Model != null)
 {
-    <table class="table table-bordered">
+<table class="table table-bordered bg-white">
+    <thead class="thead-light">
         <tr>
             <th>User Preference</th>
             <th>Rating</th>
         </tr>
-        @foreach (var pref in Model)
+    </thead>
+    @{ int count = 0;}
+    @foreach (var pref in Model)
+    {
+        if (count % 2 == 0)
         {
             <tr>
                 <td>@pref.Name</td>
                 <td>@pref.Rating</td>
             </tr>
         }
+        else
+        {
+            <tr class="table-active">
+                <td>@pref.Name</td>
+                <td>@pref.Rating</td>
+            </tr>
+        }
+        count++;
+    }
 
     </table>
 }
@@ -64,39 +78,59 @@
     userCats.Add(pref.Name);
 }
 
-<h5>Choose categories in form below:</h5>
-<form action="../Snack/PreferenceAdd">
-    <select name="category">
-        @foreach (var category in Categories.Category)
-        {
-            if (!userCats.Contains(category))
-            {
-                <option value="@category">
-                    @category
-                </option>
-            }
-        }
-    </select>
-    <input type="number" name="Rating" min="1" max="5" />
-    <input type="submit" value="Submit" />
+<form class="form-inline" action="../Snack/PreferenceAdd">
+    <div class="col-md-4"></div>
+    <div class="card col-md-4" align="center">
+            <h3>Add Preference</h3>
+            <div class="input-group">
+                <select class="form-control input-group" name="category">
+                    @foreach (var category in Categories.Category)
+                    {
+                        if (!userCats.Contains(category))
+                        {
+                            <option value="@category">
+                                @category
+                            </option>
+                        }
+                    }
+                </select>
+                <input class="form-control input-group" type="number" name="Rating" min="1" max="5"/>
+            </div>
+        
+        <div align="center">
+            <input class="form-control" type="submit" value="Submit"/>
+        </div>
+    </div>
 </form>
-
-<form action="../Snack/PreferenceChange" method="post">
-    <label>Update</label>
-    <input type="radio" name="change" value="Update" />
-    <label>Delete</label>
-    <input type="radio" name="change" value="Delete" />
-    <select name="id">
-        @foreach (var prefs in Model)
-        {
-            <option value="@prefs.PreferenceId">@prefs.Name</option>
-        }
-    </select>
-    <input type="number" name="rating" min="1" max="5" />
-    <input type="submit" value="Change" />
+<br />
+<form class="form-inline" action="../Snack/PreferenceChange" method="post">
+    <div class="col-md-4"></div>
+    <div class="card col-md-4" align="center">
+        <h3>Update Preference</h3>
+        <div class="input-group">
+            <label class="form-check-label">Update  
+                <input class="form-control col-xs-1" type="radio" name="change" value="Update" id="update" checked/>
+            </label>
+            <label class="form-check-label">Delete  
+                <input class="form-control col-xs-1" type="radio" name="change" value="Delete" id="delete"/>
+            </label>
+        </div>
+        <div class="input-group">
+            <select class="form-control input-group" name="id">
+                @foreach (var prefs in Model)
+                {
+                    <option value="@prefs.PreferenceId">@prefs.Name</option>
+                }
+            </select>
+            <input class="form-control input-group" type="number" name="rating" min="1" max="5" />
+        </div>
+        <input class="form-control" type="submit" value="Change"/>
+    </div>
 </form>
-
+<br />
 @if (ViewBag != null)
 {
-    <p>@ViewBag.Average.ToString("0.#")  User Price Preference</p>
+    <div class="card" align="center">
+        <p>@ViewBag.Average.ToString("0.#")  User Price Preference</p>
+    </div>
 }
