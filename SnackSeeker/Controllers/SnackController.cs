@@ -72,8 +72,9 @@ namespace SnackSeeker.Controllers
             var user = _context.AspNetUsers.Where(x => x.Id == id).ToList();
             userAverage = user[0].PriceAverage;
             ViewBag.Average = userAverage;
+			ViewBag.highcategory = TempData["highcategory"];
 
-            var preferences = _context.Preferences.ToList();
+			var preferences = _context.Preferences.ToList();
             var userPreferences = new List<Preferences>();
             foreach (var pref in preferences)
             {

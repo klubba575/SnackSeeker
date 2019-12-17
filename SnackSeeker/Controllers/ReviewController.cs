@@ -151,7 +151,8 @@ namespace SnackSeeker.Controllers
                     highestReviewCategories.Add(kvp.Key);
                 }
             }
-            return View(highestReviewCategories);
+			TempData["highcategory"] = highestReviewCategories;
+			return RedirectToAction("PreferenceIndex", "Snack");
         }
 		//Method to create a list of reviews for the specific user that is logged in and returning the view with that List
         public IActionResult ListReviews()
