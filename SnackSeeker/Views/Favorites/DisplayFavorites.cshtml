@@ -1,9 +1,12 @@
-﻿
+﻿@using System.Security.Claims;
+@using SnackSeeker.Models;
+
 @{
     ViewData["Title"] = "DisplayFavorites";
 }
 
 @model List<FavoritesList>
+
 <h1>AddToFavorites</h1>
 @*Creating table headers for our table of Favorite Restaurants*@
 <table class="table table-bordered">
