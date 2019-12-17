@@ -5,12 +5,14 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using SnackSeeker.Models;
 
 namespace SnackSeeker.Controllers
 {
+	[Authorize]
     public class ReviewController : Controller
     {
 		//Declaring variables to be used later for our API's and our database.
@@ -123,11 +125,14 @@ namespace SnackSeeker.Controllers
             typeOneList = _context.Review.Where(x => x.UserId == userId).Select(x => x.Type1Name).ToList();
             typeTwoList = _context.Review.Where(x => x.UserId == userId).Select(x => x.Type2Name).ToList();
             typeThreeList = _context.Review.Where(x => x.UserId == userId).Select(x => x.Type3Name).ToList();
+
 			//Putting all three category lists into one list to transfer into a dictionary to count
 			//the number of times each category is in the user's review table
             typeOneList.AddRange(typeTwoList);
             typeOneList.AddRange(typeThreeList);
-            Dictionary<string, int> reviewDictionary = new Dictionary<string, int>();
+			typeOneList.RemoveAll(x => x == null);
+
+			Dictionary<string, int> reviewDictionary = new Dictionary<string, int>();
 			//Adding new categories to the dictionary or incrementing their value if already existent
             foreach (string category in typeOneList)
             {
@@ -159,6 +164,7 @@ namespace SnackSeeker.Controllers
         {
             string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             var reviews = _context.Review.Where(x => x.UserId == userId).ToList();
+			FindHighestCategory();
             return View(reviews);
         }
     }

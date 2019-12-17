@@ -60,7 +60,6 @@ namespace SnackSeeker.Controllers
 
 			user.PriceAverage = priceAverage;
 			_context.Entry(user).State = EntityState.Modified;
-
 			_context.SaveChanges();
 		}
         public IActionResult PreferenceIndex()
