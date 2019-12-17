@@ -79,7 +79,7 @@ namespace SnackSeeker.Controllers
                 userPreferences = RandomizeThreeTimes();
                 foreach(var ranPref in userPreferences)
                 {
-                    AddPreference(ranPref.Name, (int)ranPref.Rating);
+                    AddSomething(ranPref.Name, (int)ranPref.Rating);
                 }
             }
 
@@ -87,11 +87,11 @@ namespace SnackSeeker.Controllers
         }
         public IActionResult PreferenceAdd(string category, int rating)
         {
-            AddPreference(category, rating);
+            AddSomething(category, rating);
             return RedirectToAction("PreferenceIndex");
         }
 
-        public void AddPreference(string category, int rating)
+        public void AddSomething(string category, int rating)
         {
             Preferences newPreferences = new Preferences();
             newPreferences.Name = category;
