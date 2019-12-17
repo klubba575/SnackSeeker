@@ -79,7 +79,7 @@ namespace SnackSeeker.Controllers
                 userPreferences = RandomizeThreeTimes();
                 foreach(var ranPref in userPreferences)
                 {
-                    AddSomething(ranPref.Name, (int)ranPref.Rating);
+                    AddPreference(ranPref.Name, (int)ranPref.Rating);
                 }
             }
 
@@ -87,11 +87,11 @@ namespace SnackSeeker.Controllers
         }
         public IActionResult PreferenceAdd(string category, int rating)
         {
-            AddSomething(category, rating);
+            AddPreference(category, rating);
             return RedirectToAction("PreferenceIndex");
         }
 
-        public void AddSomething(string category, int rating)
+        public void AddPreference(string category, int rating)
         {
             Preferences newPreferences = new Preferences();
             newPreferences.Name = category;
@@ -130,7 +130,7 @@ namespace SnackSeeker.Controllers
 			return View();
 		}
         [HttpPost]
-        public async Task<IActionResult> SearchCategory(string tag, string Price1, string Price2, string Price3, string Price4, string random, string sortbyName, string sortbyPrice, string sortbyRating)
+        public async Task<IActionResult> SearchCategory(string tag, string Price1, string Price2, string Price3, string Price4, string random, string sortBy)
         {
 
             List<string> checkPrice = new List<string>() { Price1, Price2, Price3, Price4 };
@@ -169,30 +169,30 @@ namespace SnackSeeker.Controllers
             }
             var tagResults = await tagResponse.Content.ReadAsAsync<BusinessRoot>();
 
-            if (sortbyName != null)
+            if (sortBy == "Name")
             {
                 tagResults.businesses.Sort((x, y) => string.Compare(x.name, y.name));
             }
-            else if (sortbyName != null)
+            else if (sortBy == "NameReverse")
             {
                 tagResults.businesses.Sort((x, y) => string.Compare(x.name, y.name));
                 tagResults.businesses.Reverse();
             }
-            else if(sortbyPrice != null)
+            else if(sortBy == "Price")
             {
                 tagResults.businesses.Sort((x, y) => string.Compare(x.price, y.price));
             }
-            else if (sortbyPrice != null)
+            else if (sortBy == "PriceReverse")
             {
                 tagResults.businesses.Sort((x, y) => string.Compare(x.price, y.price));
                 tagResults.businesses.Reverse();
 
             }
-            else if (sortbyRating != null)
+            else if (sortBy == "Rating")
             {
                 tagResults.businesses.Sort((x, y) => x.rating.CompareTo(y.rating));
             }
-            else if(sortbyRating != null)
+            else if(sortBy == "RatingReverse")
             {
                 tagResults.businesses.Sort((x, y) => x.rating.CompareTo(y.rating));
                 tagResults.businesses.Reverse();
