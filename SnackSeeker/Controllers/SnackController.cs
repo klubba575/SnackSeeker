@@ -150,7 +150,7 @@ namespace SnackSeeker.Controllers
 			return View();
 		}
         [HttpPost]
-        public async Task<IActionResult> SearchCategory(string tag, string Price1, string Price2, string Price3, string Price4, string random)
+        public async Task<IActionResult> SearchCategory(string tag, string Price1, string Price2, string Price3, string Price4, string random, string sortbyName, string sortbyPrice, string sortbyRating)
         {
 
             List<string> checkPrice = new List<string>() { Price1, Price2, Price3, Price4 };
@@ -188,6 +188,35 @@ namespace SnackSeeker.Controllers
                 tagResponse = await _client.GetAsync($"businesses/search?location={tag}&categories={preferences[0].Name},{preferences[1].Name},{preferences[2].Name}&price={multiplePrices}");
             }
             var tagResults = await tagResponse.Content.ReadAsAsync<BusinessRoot>();
+
+            if (sortbyName != null)
+            {
+                tagResults.businesses.Sort((x, y) => string.Compare(x.name, y.name));
+            }
+            else if (sortbyName != null)
+            {
+                tagResults.businesses.Sort((x, y) => string.Compare(x.name, y.name));
+                tagResults.businesses.Reverse();
+            }
+            else if(sortbyPrice != null)
+            {
+                tagResults.businesses.Sort((x, y) => string.Compare(x.price, y.price));
+            }
+            else if (sortbyPrice != null)
+            {
+                tagResults.businesses.Sort((x, y) => string.Compare(x.price, y.price));
+                tagResults.businesses.Reverse();
+
+            }
+            else if (sortbyRating != null)
+            {
+                tagResults.businesses.Sort((x, y) => x.rating.CompareTo(y.rating));
+            }
+            else if(sortbyRating != null)
+            {
+                tagResults.businesses.Sort((x, y) => x.rating.CompareTo(y.rating));
+                tagResults.businesses.Reverse();
+            }
             return View("ListCategory", tagResults);
         }
 
