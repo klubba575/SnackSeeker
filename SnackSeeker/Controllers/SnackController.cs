@@ -132,9 +132,10 @@ namespace SnackSeeker.Controllers
             return RedirectToAction("PreferenceIndex");
         }
 
-
-       public IActionResult PreferenceChange(string change, int id, int rating)
+        //Method to change/update an already selected preference. 
+        public IActionResult PreferenceChange(string change, int id, int rating)
         {
+            //Check to see if the option to change or delete was passed, and preform the appropriate action
             var pref = _context.Preferences.Find(id);
             if (change == "Delete")
             {
@@ -146,12 +147,15 @@ namespace SnackSeeker.Controllers
                 _context.Entry(pref).State = EntityState.Modified;
                 _context.Preferences.Update(pref);
             }
+            //Save the Changes to the Context
             _context.SaveChanges();
             return RedirectToAction("PreferenceIndex");
         }
+        //Method for setting up the primary Search Page
 		[HttpGet]
 		public IActionResult SearchCategory()
 		{
+            //recalculate the user's average price range and store it in a ViewBag to display on the Search Page.
 			CalcAverage();
 			var userAve = _context.AspNetUsers.ToList();
 			double? userAverage;

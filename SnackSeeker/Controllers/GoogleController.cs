@@ -8,8 +8,10 @@ using Microsoft.Extensions.Configuration;
 
 namespace SnackSeeker.Controllers
 {
+    
     public class GoogleController : Controller
     {
+        //Dependency Injection
         private readonly HttpClient _client;
         private readonly string _googleKey;
 
@@ -24,6 +26,7 @@ namespace SnackSeeker.Controllers
         {
             return View();
         }
+        //Displays the GoogleMap map of the location passed, and if applicable, the restaurant name passed as well, giving the location of the venue
         [HttpPost]
         public IActionResult DisplayInfo(string location, string name)
         {
@@ -38,5 +41,3 @@ namespace SnackSeeker.Controllers
         }
     }
 }
-
-
