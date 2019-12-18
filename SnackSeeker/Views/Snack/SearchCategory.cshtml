@@ -10,41 +10,41 @@
         <p> Enter Your Location and Preferred Price Point Please!</p>
         <input type="text" name="tag" value="" placeholder="Location" required />
         <div>
-            <label>$ - Cheapest</label>
-            <input type="checkbox" name="Price1" value="1" />
-            <label>$$</label>
-            <input type="checkbox" name="Price2" value="2" />
-            <label>$$$</label>
-            <input type="checkbox" name="Price3" value="3" />
-            <label>$$$$ - Most Expensive</label>
-            <input type="checkbox" name="Price4" value="4" />
+            <label for="Price1">$ - Cheapest</label>
+            <input type="checkbox" name="Price1" value="1" id="Price1" />
+            <label for="Price2">$$</label>
+            <input type="checkbox" name="Price2" value="2" id="Price2" />
+            <label for="Price3">$$$</label>
+            <input type="checkbox" name="Price3" value="3" id="Price3" />
+            <label for="Price4">$$$$ - Most Expensive</label>
+            <input type="checkbox" name="Price4" value="4" id="Price4" />
         </div>
         <br />
         <div>
             <p>Your average price preference is: @ViewBag.Average.ToString("0.#")</p>
-            <label>Randomize Preference Search</label>
-            <input type="checkbox" name="random" value="Random" />
+            <label for="Random">Randomize Preference Search</label>
+            <input type="checkbox" name="random" value="Random" id="Random" />
         </div>
         <br />
         <div>
-            <label>Sort by Restaurant Name A-z</label>
-            <input type="radio" name="sortBy" value="Name" />
-            <label>Z-a</label>
-            <input type="radio" name="sortBy" value="NameReverse" />
+            <label for="Name">Sort by Restaurant Name A-z</label>
+            <input type="radio" name="sortBy" value="Name" id="Name" />
+            <label for="NameReverse" id="Price1" >Z-a</label>
+            <input type="radio" name="sortBy" value="NameReverse" id="NameReverse" />
         </div>
         <br />
         <div>
-        <label>Sort by Price $-$$$$</label>
-        <input type="radio" name="sortBy" value="Price" />
-        <label>$$$$-$</label>
-        <input type="radio" name="sortBy" value="PriceReverse" />
+        <label for="Price">Sort by Price $-$$$$</label>
+        <input type="radio" name="sortBy" value="Price" id="Price" />
+        <label for="PriceReverse">$$$$-$</label>
+        <input type="radio" name="sortBy" value="PriceReverse" id="PriceReverse" />
         </div>
         <br />
         <div>
-        <label>Sort by Rating Low-High</label>
-        <input type="radio" name="sortBy" value="Rating" />
-        <label>High-Low</label>
-        <input type="radio" name="sortBy" value="RatingReverse" />
+        <label for="Rating">Sort by Rating Low-High</label>
+        <input type="radio" name="sortBy" value="Rating" id="Rating" />
+        <label for="RatingReverse">High-Low</label>
+        <input type="radio" name="sortBy" value="RatingReverse" id="RatingReverse" />
         </div>
         <input type="submit" value="Search!" />
     </div>

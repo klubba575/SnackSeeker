@@ -62,6 +62,7 @@ namespace SnackSeeker.Controllers
 			_context.Entry(user).State = EntityState.Modified;
 			_context.SaveChanges();
 		}
+
 		//Home Page for our Site, shows all our User's Preferences
         public IActionResult PreferenceIndex(string random)
         {
@@ -166,10 +167,14 @@ namespace SnackSeeker.Controllers
             List<Preferences> preferences = new List<Preferences>();
             HttpResponseMessage tagResponse;
 
-			//Using random, price, alphabetized, or rating preferences to filter our search
-            if (random != null)
+            //Using random, price, alphabetized, or rating preferences to filter our search
+            if (random == "RandomTotal")
             {
                 preferences = RandomizeThreeTimes();
+            }
+            else if (random == "RandomPersonal")
+            {
+                preferences = ThreeRandomFavorites();
             }
             else
             {
@@ -262,6 +267,26 @@ namespace SnackSeeker.Controllers
             prefs.Add(newPreference3);
 
             return prefs;
+        }
+
+        //Method pulls three random preferences from the user's already established list of preferences
+        public List<Preferences> ThreeRandomFavorites()
+        {
+            List<Preferences> favPrefs = new List<Preferences>();
+            var establishedPreferences = _context.Preferences.ToList();
+            Random rand = new Random();
+            var id = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            int find;
+            while (favPrefs.Count != 3)
+            {
+                find = rand.Next(0, establishedPreferences.Count);
+                if(!favPrefs.Contains(establishedPreferences[find]) && establishedPreferences[find].Rating >= 3)
+                {
+                    favPrefs.Add(establishedPreferences[find]);
+                }
+            }
+
+            return favPrefs;
         }
 	}
 }

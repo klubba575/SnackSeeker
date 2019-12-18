@@ -141,7 +141,12 @@ namespace SnackSeeker.Controllers
             typeOneList.AddRange(typeTwoList);
             typeOneList.AddRange(typeThreeList);
 			typeOneList.RemoveAll(x => x == null);
+            if(typeOneList.Count == 0)
+            {
+                TempData["highcategory"] = "NoCategory";
 
+                return RedirectToAction("PreferenceIndex","Snack");
+            }
 			Dictionary<string, int> reviewDictionary = new Dictionary<string, int>();
 			
 			//Adding new categories to the dictionary or incrementing their value if already existent
