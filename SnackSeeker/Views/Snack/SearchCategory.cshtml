@@ -21,9 +21,17 @@
         </div>
         <br />
         <div>
-            <p>Your average price preference is: @ViewBag.Average.ToString("0.#")</p>
-            <label for="Random">Randomize Preference Search</label>
-            <input type="checkbox" name="random" value="Random" id="Random" />
+            @if (ViewBag.Average != null)
+            {
+                <p>Your average price preference is: @ViewBag.Average.ToString("0.#")</p>
+            }
+            <label for="RandomPersonal">Randomize From Your Preferences</label>
+            <input type="radio" name="random" value="RandomPersonal" id="RandomPersonal" />
+        </div>
+        <br />
+        <div>
+            <label for="RandomTotal">Random From All Categories</label>
+            <input type="radio" name="random" value="RandomTotal" id="RandomTotal"/>
         </div>
         <br />
         <div>

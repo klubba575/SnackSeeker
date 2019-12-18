@@ -41,21 +41,24 @@ namespace SnackSeeker.Controllers
 			var reviews = _context.Review.ToList();
 			double priceAverage = 0;
 			int counter = 0;
+			var id = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 			foreach (var review in reviews) 
 			{
-				if(review.UserId == User.FindFirst(ClaimTypes.NameIdentifier).Value)
+				if(review.UserId == id)
 				{
 					priceAverage = priceAverage + (double)(review.ReviewOfPrice);
 					counter++;
 				}
 			}
-			priceAverage = priceAverage / counter;
+            if (counter != 0)
+            {
+			    priceAverage = priceAverage / counter;
+            }
 			//If the user does not have any reviews, this creates a default price average of 1
 			if (double.IsNaN(priceAverage))
 			{
 				priceAverage = 1;
 			}
-			var id = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 			var user = _context.AspNetUsers.Where(x => x.Id == id).First();
 
 			user.PriceAverage = priceAverage;
@@ -72,11 +75,11 @@ namespace SnackSeeker.Controllers
             var userAve = _context.AspNetUsers.ToList();
             double? userAverage;
             var id = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            var user = _context.AspNetUsers.Where(x => x.Id == id).ToList();
-            userAverage = user[0].PriceAverage;
+            var user = _context.AspNetUsers.Find(id);
+            userAverage = user.PriceAverage;
             
 			ViewBag.Average = userAverage;
-			ViewBag.highcategory = TempData["highcategory"];
+			//ViewBag.highcategory = TempData["highcategory"];
 
 			//Takes the user's preferences from the database and displays them as a List
             var userPreferences = new List<Preferences>();
@@ -87,9 +90,11 @@ namespace SnackSeeker.Controllers
                 {
                     AddPreference(ranPref.Name, (int)ranPref.Rating);
                 }
+            } else
+            {
+                userPreferences = _context.Preferences.Where(x => x.UserId == id).ToList();
             }
-
-            return View(_context.Preferences.Where(x => x.UserId == id).ToList());
+            return View(userPreferences);
         }
 		//Method that adds preferences to each user's preferences in the database
         public IActionResult PreferenceAdd(string category, int rating)

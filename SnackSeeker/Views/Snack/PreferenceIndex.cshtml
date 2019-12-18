@@ -129,9 +129,15 @@
     </div>
 </form>
 <br />
-@if (ViewBag != null)
+@if (ViewBag.Average != null)
 {
     <div class="card" align="center">
         <p>@ViewBag.Average.ToString("0.#")  User Price Preference</p>
+    </div>
+}
+@if (ViewBag.highcategory != null)
+{
+    <div class="card" align="center">
+        <p>Suggested Preference @ViewBag.highcategory[0]</p>
     </div>
 }
