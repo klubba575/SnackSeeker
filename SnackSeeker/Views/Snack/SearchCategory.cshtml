@@ -5,38 +5,47 @@
 @model Categories
 <h1>Seek Your Snacks, Where are you?</h1>
 
-<form action="../Snack/SearchCategory" method="post">
-    <p> Enter Your Location and Preferred Price Point Please!</p>
-    <input type="text" name="tag" value="" placeholder="Location" required />
-    <label>$ - Cheapest</label>
-    <input type="checkbox" name="Price1" value="1" />
-    <label>$$</label>
-    <input type="checkbox" name="Price2" value="2" />
-    <label>$$$</label>
-    <input type="checkbox" name="Price3" value="3" />
-    <label>$$$$ - Most Expensive</label>
-    <input type="checkbox" name="Price4" value="4" />
-    <input type="submit" value="Search!" />
-    <br />
-    <p>Your average price preference is: @ViewBag.Average.ToString("0.#")</p>
-    <label>Randomize Search from all Categories</label>
-    <input type="radio" name="random" value="RandomTotal" />
-    <br />
-    <label>Randomize Search from Personal Preferences</label>
-    <input type="radio" name="random" value="RandomPersonal" />
-    <br />
-    <label>Sort by Restaurant Name A-z</label>
-    <input type="radio" name="sortBy" value="Name" />
-    <label>Z-a</label>
-    <input type="radio" name="sortBy" value="NameReverse" />
-    <br />
-    <label>Sort by Price $-$$$$</label>
-    <input type="radio" name="sortBy" value="Price" />
-    <label>$$$$-$</label>
-    <input type="radio" name="sortBy" value="PriceReverse" />
-    <br />
-    <label>Sort by Rating Low-High</label>
-    <input type="radio" name="sortBy" value="Rating" />
-    <label>High-Low</label>
-    <input type="radio" name="sortBy" value="RatingReverse" />
+<form  action="../Snack/SearchCategory" method="post">
+    <div class="card col-md-6">
+        <p> Enter Your Location and Preferred Price Point Please!</p>
+        <input type="text" name="tag" value="" placeholder="Location" required />
+        <div>
+            <label for="Price1">$ - Cheapest</label>
+            <input type="checkbox" name="Price1" value="1" id="Price1" />
+            <label for="Price2">$$</label>
+            <input type="checkbox" name="Price2" value="2" id="Price2" />
+            <label for="Price3">$$$</label>
+            <input type="checkbox" name="Price3" value="3" id="Price3" />
+            <label for="Price4">$$$$ - Most Expensive</label>
+            <input type="checkbox" name="Price4" value="4" id="Price4" />
+        </div>
+        <br />
+        <div>
+            <p>Your average price preference is: @ViewBag.Average.ToString("0.#")</p>
+            <label for="Random">Randomize Preference Search</label>
+            <input type="checkbox" name="random" value="Random" id="Random" />
+        </div>
+        <br />
+        <div>
+            <label for="Name">Sort by Restaurant Name A-z</label>
+            <input type="radio" name="sortBy" value="Name" id="Name" />
+            <label for="NameReverse" id="Price1" >Z-a</label>
+            <input type="radio" name="sortBy" value="NameReverse" id="NameReverse" />
+        </div>
+        <br />
+        <div>
+        <label for="Price">Sort by Price $-$$$$</label>
+        <input type="radio" name="sortBy" value="Price" id="Price" />
+        <label for="PriceReverse">$$$$-$</label>
+        <input type="radio" name="sortBy" value="PriceReverse" id="PriceReverse" />
+        </div>
+        <br />
+        <div>
+        <label for="Rating">Sort by Rating Low-High</label>
+        <input type="radio" name="sortBy" value="Rating" id="Rating" />
+        <label for="RatingReverse">High-Low</label>
+        <input type="radio" name="sortBy" value="RatingReverse" id="RatingReverse" />
+        </div>
+        <input type="submit" value="Search!" />
+    </div>
 </form>
