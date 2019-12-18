@@ -9,7 +9,7 @@
     @foreach (var business in Model.businesses)
     {
     <tr>
-        <td><a href="@business.url">@business.name</a></td>
+        <td><a target="_blank" href="@business.url">@business.name</a></td>
         <td>
             <form action="../Google/DisplayInfo" method="post">
                 <input type="hidden" name="name" value="@business.name" />
