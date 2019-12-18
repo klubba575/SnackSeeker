@@ -67,7 +67,7 @@ namespace SnackSeeker
 			{
 				endpoints.MapControllerRoute(
 					name: "default",
-					pattern: "{controller=Snack}/{action=PreferenceIndex}/{id?}");
+					pattern: "{controller=Review}/{action=FindHighestCategory}/{id?}");
 				endpoints.MapRazorPages();
 			});
 		}

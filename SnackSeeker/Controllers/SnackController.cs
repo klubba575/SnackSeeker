@@ -60,13 +60,19 @@ namespace SnackSeeker.Controllers
 
 			user.PriceAverage = priceAverage;
 			_context.Entry(user).State = EntityState.Modified;
-
 			_context.SaveChanges();
 		}
+<<<<<<< HEAD
         //Method That displays the user's preferences and weights
         public IActionResult PreferenceIndex()
         {
             //Calculate the Average Price to ensure that it is always as up to date as possible.
+=======
+		//Home Page for our Site, shows all our User's Preferences
+        public IActionResult PreferenceIndex(string random)
+        {
+			//Method to show the logged in user's average price based on reviews
+>>>>>>> eb5e30311f36d8845c4e917597c6ed683a840af8
             CalcAverage();
 
             var userAve = _context.AspNetUsers.ToList();
@@ -74,63 +80,51 @@ namespace SnackSeeker.Controllers
             var id = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             var user = _context.AspNetUsers.Where(x => x.Id == id).ToList();
             userAverage = user[0].PriceAverage;
-            ViewBag.Average = userAverage;
+            
+			ViewBag.Average = userAverage;
+			ViewBag.highcategory = TempData["highcategory"];
 
-            var preferences = _context.Preferences.ToList();
+			//Takes the user's preferences from the database and displays them as a List
             var userPreferences = new List<Preferences>();
-            foreach (var pref in preferences)
+            if(random != null) 
             {
-                if (pref.UserId == User.FindFirst(ClaimTypes.NameIdentifier).Value)
+                userPreferences = RandomizeThreeTimes();
+                foreach(var ranPref in userPreferences)
                 {
-                    userPreferences.Add(pref);
+                    AddPreference(ranPref.Name, (int)ranPref.Rating);
                 }
             }
-            return View(userPreferences);
-        }
-        //TODO: Make a model for preference history including a List of Review and Categories
-        public IActionResult PreferenceHistory()
-        {
-            return View();
-        }
-        public IActionResult UserPreference(string weight)
-        {
-            var findPreference = _context.Preferences.Find("UserPreference");
-            if(findPreference == null)
-            {
-                Preferences userPreference = new Preferences();
-                userPreference.UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-                userPreference.Name = "UserPreference";
-                userPreference.Rating = double.Parse(weight);
-                _context.Preferences.Add(userPreference);
-            }
-            else
-            {
-                findPreference.Rating = double.Parse(weight);
-                _context.Entry(findPreference).State = EntityState.Modified;
-                _context.Update(findPreference);
-            }
-            _context.SaveChanges();
 
+            return View(_context.Preferences.Where(x => x.UserId == id).ToList());
+        }
+		//Method that adds preferences to each user's preferences in the database
+        public IActionResult PreferenceAdd(string category, int rating)
+        {
+            AddPreference(category, rating);
             return RedirectToAction("PreferenceIndex");
         }
-        public IActionResult PreferenceAdd(string category, int rating)
+
+        public void AddPreference(string category, int rating)
         {
             Preferences newPreferences = new Preferences();
             newPreferences.Name = category;
             newPreferences.Rating = rating;
             newPreferences.UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            var findCategory = _context.Preferences.ToList();
             _context.Preferences.Add(newPreferences);
             _context.SaveChanges();
-            return RedirectToAction("PreferenceIndex");
         }
+		//Method that allows you to update or delete your preferences
+		//Both options change that user's data in the database and redisplays the Preference Index accordingly
+
        public IActionResult PreferenceChange(string change, int id, int rating)
         {
+			//Delete a user preference
             var pref = _context.Preferences.Find(id);
             if (change == "Delete")
             {
                 _context.Preferences.Remove(pref);
             }
+			//Update the rating on a user preference
             else if (change == "Update")
             {
                 pref.Rating = rating;
@@ -141,6 +135,7 @@ namespace SnackSeeker.Controllers
             return RedirectToAction("PreferenceIndex");
         }
 		[HttpGet]
+		//Get Method that is used for getting user search filters
 		public IActionResult SearchCategory()
 		{
 			CalcAverage();
@@ -155,11 +150,13 @@ namespace SnackSeeker.Controllers
 
         //method which displays a person
         [HttpPost]
-        public async Task<IActionResult> SearchCategory(string tag, string Price1, string Price2, string Price3, string Price4, string random)
+		//Post Method that uses user filter along with the Yelp API to bring up snack results based on the filters
+        public async Task<IActionResult> SearchCategory(string tag, string Price1, string Price2, string Price3, string Price4, string random, string sortBy)
         {
 
             List<string> checkPrice = new List<string>() { Price1, Price2, Price3, Price4 };
-
+			
+			//Option to search for more than one price point
             var multiplePrices = "";
             foreach (var price in checkPrice)
             {
@@ -170,11 +167,13 @@ namespace SnackSeeker.Controllers
             }
             multiplePrices = multiplePrices.TrimEnd(',');
 
+			//Using logged in user's preference List to search
             string id = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             var categories = _context.Preferences.Where(x => x.UserId == id).ToList();
             List<Preferences> preferences = new List<Preferences>();
             HttpResponseMessage tagResponse;
 
+			//Using random, price, alphabetized, or rating preferences to filter our search
             if (random != null)
             {
                 preferences = RandomizeThreeTimes();
@@ -193,14 +192,44 @@ namespace SnackSeeker.Controllers
                 tagResponse = await _client.GetAsync($"businesses/search?location={tag}&categories={preferences[0].Name},{preferences[1].Name},{preferences[2].Name}&price={multiplePrices}");
             }
             var tagResults = await tagResponse.Content.ReadAsAsync<BusinessRoot>();
+
+            if (sortBy == "Name")
+            {
+                tagResults.businesses.Sort((x, y) => string.Compare(x.name, y.name));
+            }
+            else if (sortBy == "NameReverse")
+            {
+                tagResults.businesses.Sort((x, y) => string.Compare(x.name, y.name));
+                tagResults.businesses.Reverse();
+            }
+            else if(sortBy == "Price")
+            {
+                tagResults.businesses.Sort((x, y) => string.Compare(x.price, y.price));
+            }
+            else if (sortBy == "PriceReverse")
+            {
+                tagResults.businesses.Sort((x, y) => string.Compare(x.price, y.price));
+                tagResults.businesses.Reverse();
+
+            }
+            else if (sortBy == "Rating")
+            {
+                tagResults.businesses.Sort((x, y) => x.rating.CompareTo(y.rating));
+            }
+            else if(sortBy == "RatingReverse")
+            {
+                tagResults.businesses.Sort((x, y) => x.rating.CompareTo(y.rating));
+                tagResults.businesses.Reverse();
+            }
             return View("ListCategory", tagResults);
         }
-
+		
+		//Method to List out all our restuls
         public IActionResult ListCategory(BusinessRoot result)
 		{
 			return View(result);
 		}
-
+		//Method used to randomize all the different options in our Categories class
         public string RandomizeAll()
         {
             var categories = Categories.Category;
@@ -208,7 +237,8 @@ namespace SnackSeeker.Controllers
             int selected = rand.Next(categories.Count);
             return categories[selected];
         }
-
+		//Method used to give three random categories for a new user if they do not wish to choose their own
+		//Each random preference created is assigned to the logged in user and given a rating of three
         public List<Preferences> RandomizeThreeTimes()
         {
             List<string> categories = new List<string>();

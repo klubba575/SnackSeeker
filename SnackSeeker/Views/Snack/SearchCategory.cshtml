@@ -18,7 +18,22 @@
     <input type="checkbox" name="Price4" value="4" />
     <input type="submit" value="Search!" />
     <br />
+    <p>Your average price preference is: @ViewBag.Average.ToString("0.#")</p>
     <label>Randomize Preference Search</label>
     <input type="checkbox" name="random" value="Random" />
+    <br />
+    <label>Sort by Restaurant Name A-z</label>
+    <input type="radio" name="sortBy" value="Name" />
+    <label>Z-a</label>
+    <input type="radio" name="sortBy" value="NameReverse" />
+    <br />
+    <label>Sort by Price $-$$$$</label>
+    <input type="radio" name="sortBy" value="Price" />
+    <label>$$$$-$</label>
+    <input type="radio" name="sortBy" value="PriceReverse" />
+    <br />
+    <label>Sort by Rating Low-High</label>
+    <input type="radio" name="sortBy" value="Rating" />
+    <label>High-Low</label>
+    <input type="radio" name="sortBy" value="RatingReverse" />
 </form>
-<p>Your average price preference is: @ViewBag.Average.ToString("0.#")</p>
