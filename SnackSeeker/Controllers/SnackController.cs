@@ -62,10 +62,7 @@ namespace SnackSeeker.Controllers
 			_context.Entry(user).State = EntityState.Modified;
 			_context.SaveChanges();
 		}
-<<<<<<< HEAD
 
-=======
->>>>>>> eaa58bfb61d0bffb993f75aab0eeb07f12edab29
 		//Home Page for our Site, shows all our User's Preferences
         public IActionResult PreferenceIndex(string random)
         {
