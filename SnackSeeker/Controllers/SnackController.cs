@@ -62,17 +62,10 @@ namespace SnackSeeker.Controllers
 			_context.Entry(user).State = EntityState.Modified;
 			_context.SaveChanges();
 		}
-<<<<<<< HEAD
-        //Method That displays the user's preferences and weights
-        public IActionResult PreferenceIndex()
-        {
-            //Calculate the Average Price to ensure that it is always as up to date as possible.
-=======
 		//Home Page for our Site, shows all our User's Preferences
         public IActionResult PreferenceIndex(string random)
         {
 			//Method to show the logged in user's average price based on reviews
->>>>>>> eb5e30311f36d8845c4e917597c6ed683a840af8
             CalcAverage();
 
             var userAve = _context.AspNetUsers.ToList();
