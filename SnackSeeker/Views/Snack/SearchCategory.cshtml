@@ -19,8 +19,11 @@
     <input type="submit" value="Search!" />
     <br />
     <p>Your average price preference is: @ViewBag.Average.ToString("0.#")</p>
-    <label>Randomize Preference Search</label>
-    <input type="checkbox" name="random" value="Random" />
+    <label>Randomize Search from all Categories</label>
+    <input type="radio" name="random" value="RandomTotal" />
+    <br />
+    <label>Randomize Search from Personal Preferences</label>
+    <input type="radio" name="random" value="RandomPersonal" />
     <br />
     <label>Sort by Restaurant Name A-z</label>
     <input type="radio" name="sortBy" value="Name" />
