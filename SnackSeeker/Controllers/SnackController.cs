@@ -63,8 +63,6 @@ namespace SnackSeeker.Controllers
 			_context.SaveChanges();
 		}
 
-        //Method That displays the user's preferences and weights
-        //Calculate the Average Price to ensure that it is always as up to date as possible.
 		//Home Page for our Site, shows all our User's Preferences
         public IActionResult PreferenceIndex(string random)
         {
